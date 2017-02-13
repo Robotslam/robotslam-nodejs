@@ -1,14 +1,24 @@
-var URL = require('url-parse');
-var roslib = require('roslib');
-var WiFiScanner = require('./wifi');
+const URL = require('url-parse');
+const roslib = require('roslib');
+const WiFiScanner = require('./wifi');
 
-var ros_uri = new URL(process.env['ROS_MASTER_URI']);
-var ros = new roslib.Ros({
-    url : 'ws://'+ ros_uri.hostname +':9090'
+const ros_uri = new URL(process.env['ROS_MASTER_URI']);
+const ros = new roslib.Ros({
+	url : 'ws://'+ ros_uri.hostname +':9090'
 });
 
 ros.on('connection', function() {
 	console.log('Connected to websocket server.');
+
+	const cmd_vel = new roslib.Topic({
+		ros: ros,
+		name: '/wifi_scanner/data_filtered',
+		messageType: 'wifi_scanner/WifiMeasurement'
+	});
+
+	cmd_vel.subscribe(function (msg) {
+		console.log(msg);
+	});
 });
 
 ros.on('error', function(error) {
@@ -19,4 +29,4 @@ ros.on('close', function() {
 	console.log('Connection to websocket server closed.');
 });
 
-var wifi_scanner = new WiFiScanner(ros);
+const wifi_scanner = new WiFiScanner(ros);
