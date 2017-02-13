@@ -1,11 +1,13 @@
+const roslib = require('roslib');
+
 class WiFiScanner {
   constructor(ros) {
     this._ros = ros;
 
     this.topic = new roslib.Topic({
-      ros: this.ros,
-      name: '/wifi_scanner/data_filtered',
-      messageType: 'wifi_scanner/WifiMeasurement'
+      ros: this._ros,
+      name: '/wifi_scanner/data_filtered_array',
+      messageType: 'wifi_scanner/WifiMeasurementArray'
     });
   }
 

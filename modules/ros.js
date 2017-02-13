@@ -2,8 +2,6 @@ const URL = require('url-parse');
 const roslib = require('roslib');
 const WiFiScanner = require('./wifi');
 
-//const wifi_scanner = new WiFiScanner(ros);
-
 class RosManager {
 
   constructor() {
@@ -24,6 +22,8 @@ class RosManager {
     this.ros.on('close', function () {
       console.log('Connection to websocket server closed.');
     });
+
+    this.wifiScanner = new WiFiScanner(this.ros);
   }
 
   start() {
@@ -31,11 +31,11 @@ class RosManager {
       throw 'Not connected to server';
     }
 
-
+    this.wifiScanner.start();
   }
 
   stop() {
-    // TODO: Implement
+    this.wifiScanner.stop();
   }
 
 }
