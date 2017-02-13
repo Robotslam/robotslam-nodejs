@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var ros = require('./modules/ros');
 var index = require('./routes/index');
 var users = require('./routes/users');
+var toggle = require('./routes/toggle');
 
 var app = express();
 
@@ -37,6 +38,7 @@ if (app.get('env') == 'production') {
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/toggle', toggle);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -2,31 +2,42 @@ const URL = require('url-parse');
 const roslib = require('roslib');
 const WiFiScanner = require('./wifi');
 
-const ros_uri = new URL(process.env['ROS_MASTER_URI']);
-const ros = new roslib.Ros({
-	url : 'ws://'+ ros_uri.hostname +':9090'
-});
+//const wifi_scanner = new WiFiScanner(ros);
 
-ros.on('connection', function() {
-	console.log('Connected to websocket server.');
+class RosManager {
 
-	const cmd_vel = new roslib.Topic({
-		ros: ros,
-		name: '/wifi_scanner/data_filtered',
-		messageType: 'wifi_scanner/WifiMeasurement'
-	});
+  constructor() {
+    const ros_uri = new URL(process.env['ROS_MASTER_URI']);
+    this.ros = new roslib.Ros({
+      url: 'ws://' + ros_uri.hostname + ':9090'
+    });
 
-	cmd_vel.subscribe(function (msg) {
-		console.log(msg);
-	});
-});
+    this.ros.on('connection', () => {
+      console.log('Connected to websocket server.');
+      this.connected = true;
+    });
 
-ros.on('error', function(error) {
-	console.log('Error connecting to websocket server: ', error);
-});
+    this.ros.on('error', function (error) {
+      console.log('Error connecting to websocket server: ', error);
+    });
 
-ros.on('close', function() {
-	console.log('Connection to websocket server closed.');
-});
+    this.ros.on('close', function () {
+      console.log('Connection to websocket server closed.');
+    });
+  }
 
-const wifi_scanner = new WiFiScanner(ros);
+  start() {
+    if (!this.connected) {
+      throw 'Not connected to server';
+    }
+
+
+  }
+
+  stop() {
+    // TODO: Implement
+  }
+
+}
+
+module.exports = new RosManager();
