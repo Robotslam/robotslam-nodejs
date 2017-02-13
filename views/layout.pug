@@ -2,6 +2,22 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    //link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    block content
+
+    nav.navbar.navbar-toggleable-md.fixed-top.navbar-inverse.bg-primary
+      div.container
+        button.navbar-toggler.navbar-toggler-right(type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation")
+          span.navbar-toggler-icon
+
+        a.navbar-brand(href="#") RobotSlam
+
+        div.collapse.navbar-collapse#navbarNavAltMarkup
+
+        div.navbar-nav
+          a.nav-item.nav-link.active(href="#") Home
+
+    div.container#main
+      block content
+
+    script(src='/js/bundle.js')
