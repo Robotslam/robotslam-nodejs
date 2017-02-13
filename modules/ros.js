@@ -1,9 +1,9 @@
 var URL = require('url-parse');
 var roslib = require('roslib');
-var WiFiScanner = require('./modules/wifi');
+var WiFiScanner = require('./wifi');
 
 var ros_uri = new URL(process.env['ROS_MASTER_URI']);
-var ros = new ROSLIB.Ros({
+var ros = new roslib.Ros({
     url : 'ws://'+ ros_uri.hostname +':9090'
 });
 
@@ -19,4 +19,4 @@ ros.on('close', function() {
 	console.log('Connection to websocket server closed.');
 });
 
-var wifi_scanner = WiFiScanner(ros);
+var wifi_scanner = new WiFiScanner(ros);
