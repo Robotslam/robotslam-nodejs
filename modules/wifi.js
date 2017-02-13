@@ -4,5 +4,6 @@ class WiFiScanner {
 	}
 }
 
+module.exports = WiFiScanner;
 //const wifiScanner = new WiFiScanner();
-export default WiFiScanner;
+//export default WiFiScanner;
