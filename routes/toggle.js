@@ -2,14 +2,23 @@ const express = require('express');
 const router = express.Router();
 const ros = require('../modules/ros');
 
-/* GET home page. */
-router.get('/start', function(req, res, next) {
-  ros.start();
+router.get('/start', function (req, res, next) {
+  try {
+    ros.start();
+  } catch (err) {
+    res.status(500).send(err);
+  }
+
   res.redirect('/');
 });
 
-router.get('/stop', function(req, res, next) {
-  ros.stop();
+router.get('/stop', function (req, res, next) {
+  try {
+    ros.stop();
+  } catch (err) {
+    res.status(500).send(err);
+  }
+
   res.redirect('/');
 });
 

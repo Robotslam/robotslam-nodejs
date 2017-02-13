@@ -23,6 +23,8 @@ class RosManager {
       console.log('Connection to websocket server closed.');
     });
 
+    this.active = false;
+
     this.wifiScanner = new WiFiScanner(this.ros);
   }
 
@@ -31,10 +33,12 @@ class RosManager {
       throw 'Not connected to server';
     }
 
+    this.active = true;
     this.wifiScanner.start();
   }
 
   stop() {
+    this.active = false;
     this.wifiScanner.stop();
   }
 
