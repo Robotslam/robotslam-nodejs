@@ -13,6 +13,7 @@
     "morgan": "~1.7.0",
     "node-sass-middleware": "0.9.8",
     "pug": "~2.0.0-beta10",
+    "roslib": "github:robotwebtools/roslibjs#master",
     "serve-favicon": "~2.3.2"
   }
 }
