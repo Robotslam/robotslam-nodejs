@@ -20,7 +20,20 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+if (app.get('env') == 'production') {
+  app.use(express.static(path.join(__dirname, 'public')));
+} else {
+  const webpack = require('webpack');
+  const webpackConfig = require('./webpack.config');
+  const compiler = webpack(webpackConfig);
+
+  app.use(require("webpack-dev-middleware")(compiler, {
+    noInfo: true,
+    publicPath: webpackConfig.output.publicPath
+  }));
+  app.use(require("webpack-hot-middleware")(compiler));
+}
 
 app.use('/', index);
 app.use('/users', users);
