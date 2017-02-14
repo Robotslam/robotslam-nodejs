@@ -67,7 +67,7 @@ function formatHeader(timestamp, msg) {
     'f',
     0,
     timestamp, // Last scantime
-    'RobotSlamIMEI', // Unique identifier for device
+    'robotslamimei', // Unique identifier for device
     'RobotSlam', // Application name
     '',
     '',
