@@ -1,4 +1,5 @@
 @import "~bootstrap/scss/bootstrap.scss";
+@import "~leaflet/dist/leaflet.css";
 
 body {
   padding-top: 5rem;
@@ -6,4 +7,9 @@ body {
 
 #main {
 
+}
+
+#map {
+  height: 600px;
+  margin-bottom: 15px;
 }

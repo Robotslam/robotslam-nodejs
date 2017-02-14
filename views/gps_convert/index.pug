@@ -2,15 +2,19 @@ extends ../layout
 
 block content
   h1= title
-  form(method='post' enctype='multipart/form-data' action='upload')
+  form(method='post' enctype='multipart/form-data' action='gps_convert/fit_on_map')
     .form-group.row
-      label Map image (.pgm)
+      .col-sm-10
+        label Map image (.pgm)
       .col-sm-10
         input(type='file' name='map_image')
 
     .form-group.row
-      label Map description (.yaml)
+      .col-sm-10
+        label Map description (.yaml)
       .col-sm-10
         input(type='file' name='map_description')
 
+    .form-group.row
+      button.btn.btn-primary(type="submit") Upload
 

@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+  h1= title
+  //.hidden
+  img#map-image(src=map_image_data)
+  #map
+  a.btn.btn-secondary#move-to-center(href='#') Move map to center
