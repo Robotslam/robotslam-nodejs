@@ -1,6 +1,6 @@
 const URL = require('url-parse');
 const roslib = require('roslib');
-const WiFiScanner = require('./wifi');
+const WiFiScanner = require('./wifi/index');
 
 class RosManager {
 

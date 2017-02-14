@@ -1,4 +1,5 @@
 const roslib = require('roslib');
+const exportCsv = require('./export');
 
 class WiFiScanner {
   constructor(ros) {
@@ -12,8 +13,9 @@ class WiFiScanner {
   }
 
   start() {
+    console.log("hi");
     this.topic.subscribe(function (msg) {
-      console.log(msg);
+      exportCsv(msg);
     });
   }
 
@@ -21,9 +23,6 @@ class WiFiScanner {
     this.topic.unsubscribe();
   }
 
-
 }
 
 module.exports = WiFiScanner;
-//const wifiScanner = new WiFiScanner();
-//export default WiFiScanner;
