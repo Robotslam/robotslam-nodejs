@@ -10,28 +10,88 @@ function exportCsv(msg) {
     return null;
   }
 
-  // Add a timestamp field, which is in milliseconds.
-  const measurements = msg.measurements.map(function(val) {
-    val.timestamp = val.stamp.secs * 1000 + Math.round(val.stamp.nsecs / 1000000);
+  const timestamp = stampToTimestamp(msg.stamp);
 
-    return val;
-  });
+  const measurements = msg.measurements.map(formatMeasurement(timestamp));
+  //console.log(measurements);
 
-  const sortedMeasurements = measurements.sort(function(a, b) {
-    return a.timestamp - b.timestamp;
-  });
+  const headers = formatHeader(timestamp, msg);
 
-  const ref = sortedMeasurements[0];
-  const tmp = sortedMeasurements.map(function(val) {
-    val.age = ref.timestamp - val.timestamp;
-  });
+  const out = headers;
+  out.push([]);
+  out.push(...measurements);
+  out.push([]);
+  out.push(['-- New Line --']);
 
-  console.log(tmp);
+  return out;
+}
 
+function formatMeasurement(timestamp, val) {
+  return (val) => {
+    const age = timestamp - stampToTimestamp(val.stamp);
+    return [
+      [
+        'W',       // WiFi / BT?
+        val.bssid, // BSSID
+        val.ssid,  // SSID
+        val.rssi,  // RSSID
+        '',        // Capabilities (Encryption Type?)
+        '',        // Frequency
+        age,       // Age
+        '',        // Venue Name    (Only available on passpoint network)
+        ''         // Operator Name (Only available on passpoint network)
+      ],
+      [
+        'AV',
+        '1.0',
+        1
+      ],
 
+    ];
+  }
+}
 
+function formatHeader(timestamp, msg) {
+  return [
+    1,              // Valid?
+    msg.position.x, // Latitude
+    msg.position.y, // Longitude
+    0.1,            // Accuracy
+    0,              // Altitude
+    0,              // Speed
+    0,              // Bearing
+    0,              // Age of location
+    '',
+    '',
+    'f',
+    'f',
+    0,
+    timestamp, // Last scantime
+    'RobotSlamIMEI', // Unique identifier for device
+    'RobotSlam', // Application name
+    '',
+    '',
+    0,  // WiFi getLocation?
+    0,  // noLearning?
+    '',
+    0,  // refPoints
+    '',
+    '',
+    '', // Room
+    '', // Accuracy?
+    '',
+    '',
+  ];
+}
 
-  console.log(msg.measurements);
+/**
+ * Converts the ROS time attribute to milliseconds timestamp.
+ *
+ * @param {object} stamp
+ * @returns {number}
+ */
+function stampToTimestamp(stamp) {
+  return stamp.secs * 1000 + Math.round(stamp.nsecs / 1000000);
 }
 
 module.exports = exportCsv;

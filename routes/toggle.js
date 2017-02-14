@@ -6,6 +6,7 @@ router.get('/start', function (req, res, next) {
   try {
     ros.start();
   } catch (err) {
+    console.error(err);
     res.status(500).send(err);
   }
 
@@ -16,6 +17,7 @@ router.get('/stop', function (req, res, next) {
   try {
     ros.stop();
   } catch (err) {
+    console.error(err);
     res.status(500).send(err);
   }
 
