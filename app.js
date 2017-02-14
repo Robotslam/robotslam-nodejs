@@ -8,6 +8,7 @@ var ros = require('./modules/ros');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var toggle = require('./routes/toggle');
+var gps_convert = require('./routes/gps_convert');
 
 var app = express();
 
@@ -39,6 +40,7 @@ if (app.get('env') == 'production') {
 app.use('/', index);
 app.use('/users', users);
 app.use('/toggle', toggle);
+app.use('/gps_convert', gps_convert);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
