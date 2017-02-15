@@ -5,23 +5,28 @@
  */
 function exportCsv(msg) {
 
-  // Ensure we actually have some data to export
-  if (msg.measurements.length <= 0) {
-    return null;
-  }
+  const out = [];
 
-  const timestamp = stampToTimestamp(msg.stamp);
+  // Iterate over each measurement time
+  msg.forEach((m) => {
 
-  const measurements = msg.measurements.map(formatMeasurement(timestamp));
-  //console.log(measurements);
+    // Ensure we actually have some data to export
+    if (m.measurements.length <= 0) {
+      return null;
+    }
 
-  const headers = formatHeader(timestamp, msg);
+    const timestamp = stampToTimestamp(m.stamp);
 
-  const out = headers;
-  out.push([]);
-  out.push(...measurements);
-  out.push([]);
-  out.push(['-- New Line --']);
+    const measurements = m.measurements.map(formatMeasurement(timestamp));
+    //console.log(measurements);
+
+    out.push(formatHeader(timestamp, m));
+    out.push(['AV', '1.0', 1]);
+    out.push([]);
+    out.push(...measurements);
+    out.push([]);
+    out.push(['-- New Line --']);
+  });
 
   return out;
 }
@@ -30,23 +35,15 @@ function formatMeasurement(timestamp, val) {
   return (val) => {
     const age = timestamp - stampToTimestamp(val.stamp);
     return [
-      [
-        'W',       // WiFi / BT?
-        val.bssid, // BSSID
-        val.ssid,  // SSID
-        val.rssi,  // RSSID
-        '',        // Capabilities (Encryption Type?)
-        '',        // Frequency
-        age,       // Age
-        '',        // Venue Name    (Only available on passpoint network)
-        ''         // Operator Name (Only available on passpoint network)
-      ],
-      [
-        'AV',
-        '1.0',
-        1
-      ],
-
+      'W',       // WiFi / BT?
+      val.bssid, // BSSID
+      val.ssid,  // SSID
+      val.rssi,  // RSSID
+      '',        // Capabilities (Encryption Type?)
+      '',        // Frequency
+      age,       // Age
+      '',        // Venue Name    (Only available on passpoint network)
+      ''         // Operator Name (Only available on passpoint network)
     ];
   }
 }

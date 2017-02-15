@@ -1,7 +1,5 @@
 const fs = require('fs');
 const roslib = require('roslib');
-// const exportCsv = require('./export');
-// const CsvWriter = require('./csv_writer');
 
 class WiFiScanner {
   constructor(ros) {
@@ -18,17 +16,9 @@ class WiFiScanner {
   start() {
 
     this.messages = [];
-    /*
-    const currentDate = new Date();
-    const filename = currentDate.getTime();
-
-    this.writer = new CsvWriter();
-    this.writer.start(filename);
-*/
 
     this.topic.subscribe((msg) => {
       this.messages.push(msg);
-      //this.writer.writeLines(exportCsv(msg));
     });
   }
 

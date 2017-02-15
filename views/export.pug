@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method="post")
+    .form-group
+      label(for="file") File
+      select#file.form-control.custom-select(name="file")
+        for item in files
+          option #{item}
+    .form-group
+      input.btn.btn-primary(type="submit", value="Download CSV")

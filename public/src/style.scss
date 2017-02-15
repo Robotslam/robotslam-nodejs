@@ -5,6 +5,14 @@ body {
   padding-top: 5rem;
 }
 
+.logo {
+  display: block;
+  background: url('./images/robot.png');
+  background-size: 208px 40px;
+  height: 40px;
+  width: 208px;
+}
+
 #main {
 
 }
@@ -13,3 +21,4 @@ body {
   height: 600px;
   margin-bottom: 15px;
 }
+

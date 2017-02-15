@@ -10,6 +10,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var toggle = require('./routes/toggle');
 var gps_convert = require('./routes/gps_convert');
+const exportRoute = require('./routes/export');
 
 var app = express();
 
@@ -43,6 +44,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/toggle', toggle);
 app.use('/gps_convert', gps_convert);
+app.use('/export', exportRoute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
