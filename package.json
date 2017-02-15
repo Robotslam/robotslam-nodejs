@@ -11,15 +11,17 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.0",
     "express": "~4.14.1",
-    "fast-csv": "^2.3.1",
     "express-fileupload": "0.0.7",
+    "fast-csv": "^2.3.1",
     "gm": "^1.23.0",
     "morgan": "~1.7.0",
     "netpbm": "^1.1.1",
     "node-base64-image": "^1.0.3",
     "pug": "~2.0.0-beta10",
+    "regression": "^1.4.0",
     "roslib": "github:robotwebtools/roslibjs#master",
     "serve-favicon": "~2.3.2",
+    "transformation-matrix-js": "^2.7.1",
     "url-parse": "^1.1.7"
   },
   "devDependencies": {
