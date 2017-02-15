@@ -25,9 +25,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(fileUpload());
 
-if (app.get('env') == 'production') {
-  app.use(express.static(path.join(__dirname, 'public')));
-} else {
+if (app.get('env') !== 'production') {
   const webpack = require('webpack');
   const webpackConfig = require('./webpack.config');
   const compiler = webpack(webpackConfig);
@@ -38,6 +36,8 @@ if (app.get('env') == 'production') {
   }));
   app.use(require("webpack-hot-middleware")(compiler));
 }
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
