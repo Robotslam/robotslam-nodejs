@@ -1,4 +1,4 @@
-const bluebird = require('bluebird');
+const config = require('config');
 const fs = require('fs-promise');
 const express = require('express');
 const router = express.Router();
@@ -48,7 +48,7 @@ function storeImage(data) {
 
       return new Promise((fulfill, reject) => {
         const img = gm(buffer, 'image.pgm')
-          .transparent('#CDCDCD');
+          .transparent(config.get('image.transparent'));
 
         // TODO: Remove?
         img.write('/tmp/map_image.png', (err) => {
