@@ -13,6 +13,7 @@
     "express": "~4.14.1",
     "express-fileupload": "0.0.7",
     "fast-csv": "^2.3.1",
+    "fs-promise": "^2.0.0",
     "gm": "^1.23.0",
     "js-yaml": "^3.8.1",
     "mathjs": "^3.9.1",
