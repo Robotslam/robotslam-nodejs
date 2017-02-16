@@ -1,20 +1,42 @@
 const start_lng = 55.711958;
 const start_lat = 13.215353;
-const map = L.map('map').setView([start_lng, start_lat], 19);
 
-L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19
-}).addTo(map);
+const tileLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+  maxZoom: 19
+});
 
-var working_icon = new L.Icon({
-    iconUrl: require('../images/marker-icon.png'),
-    iconAnchor: new L.Point(12, 41)
-    // iconSize:    [25, 41],
-    // iconAnchor:  [12, 41],
-    // popupAnchor: [1, -34],
-    // tooltipAnchor: [16, -28],
-    // shadowSize: [41, 41]
+const map = L.map('map', {
+  center: [start_lng, start_lat],
+  zoom: 19,
+  maxZoom: 19,
+  layers: [tileLayer]
+});
+
+// Load Micello
+L.micello.loader.on('indoorReady', function (e) {
+  const micelloCommunity = L.micello.community(11858, {
+    key: 'hmtllTp8kPFOPy0FZKOH6kU7nHO5Ep',
+    centerCommunity: true
+  });
+
+  micelloCommunity.addTo(map);
+
+  micelloCommunity.on('indoorClick', function (e) {
+    if (e && e.indoor && e.indoor.id) {
+      clickHandler();
+    }
+  });
+});
+
+const working_icon = new L.Icon({
+  iconUrl: require('../images/marker-icon.png'),
+  iconAnchor: new L.Point(12, 41)
+  // iconSize:    [25, 41],
+  // iconAnchor:  [12, 41],
+  // popupAnchor: [1, -34],
+  // tooltipAnchor: [16, -28],
+  // shadowSize: [41, 41]
 });
 
 const image_tag = document.querySelector("#map-image");
@@ -24,31 +46,21 @@ const gps_references = eval(image_tag.getAttribute('data-gps-references'));
 const origin = eval(image_tag.getAttribute('data-origin'));
 const resolution = eval(image_tag.getAttribute('data-resolution'));
 
-var topleft    = L.latLng(40.52256691873593, -3.7743186950683594),
-    topright   = L.latLng(40.5210255066156, -3.7734764814376835),
-    bottomleft = L.latLng(40.52180437272552, -3.7768453359603886);
+const topleft = L.latLng(40.52256691873593, -3.7743186950683594),
+  topright = L.latLng(40.5210255066156, -3.7734764814376835),
+  bottomleft = L.latLng(40.52180437272552, -3.7768453359603886);
 
-var marker1 = L.marker(topleft, {draggable: true, icon: working_icon} ).addTo(map),
-    marker2 = L.marker(topright, {draggable: true, icon: working_icon} ).addTo(map),
-    marker3 = L.marker(bottomleft, {draggable: true, icon: working_icon} ).addTo(map),
-    marker4 = L.marker(topleft, {draggable: true, icon: working_icon} ).addTo(map);
+const marker1 = L.marker(topleft, {draggable: true, icon: working_icon}).addTo(map),
+  marker2 = L.marker(topright, {draggable: true, icon: working_icon}).addTo(map),
+  marker3 = L.marker(bottomleft, {draggable: true, icon: working_icon}).addTo(map),
+  marker4 = L.marker(topleft, {draggable: true, icon: working_icon}).addTo(map);
 
-var overlay = L.imageOverlay.rotated(image_src, topleft, topright, bottomleft, {
-    opacity: 0.9,
-    interactive: true,
-    attribution: "&copy; <a href='http://robot.oscarhinton.com'>The RobotSLAM Office</a>"
+const overlay = L.imageOverlay.rotated(image_src, topleft, topright, bottomleft, {
+  opacity: 1,
+  interactive: true,
+  attribution: "&copy; <a href='http://robot.oscarhinton.com'>The RobotSLAM Office</a>"
 });
 overlay.addTo(map);
-
-L.micello.loader.on("indoorReady", function (e) {
-  community = L.micello.community(11858, {
-    key: "hmtllTp8kPFOPy0FZKOH6kU7nHO5Ep",
-    centerCommunity: true
-  }).addTo(map);
-  map.on('click', function(e){
-    setSelectedLocation(e.latlng);
-  });
-});
 
 function moveToCenter(center, no_repos_center) {
   const map_width_meters = image_tag.naturalWidth * resolution;
@@ -62,9 +74,9 @@ function moveToCenter(center, no_repos_center) {
   const lat_top = height_box.getNorth();
   const lat_bottom = height_box.getSouth();
 
-  var topleft    = L.latLng(lat_top, lng_left),
-      topright   = L.latLng(lat_top, lng_right),
-      bottomleft = L.latLng(lat_bottom, lng_left);
+  const topleft = L.latLng(lat_top, lng_left),
+    topright = L.latLng(lat_top, lng_right),
+    bottomleft = L.latLng(lat_bottom, lng_left);
   //topleft, topright, bottomleft
 
   marker1.setLatLng(topleft);
@@ -79,7 +91,7 @@ function repositionImageAfterMarkers(no_repos_center) {
   if (!no_repos_center) {
     repositionCenterMarker(topleft, topright, bottomleft);
   }
-};
+}
 
 function repositionCenterMarker(topleft, topright, bottomleft) {
   marker4.setLatLng(new L.LatLngBounds(topleft, topright).extend(bottomleft).getCenter());
@@ -109,13 +121,14 @@ marker4.on('drag', repositionImageAfterCenterMarker);
 
 document.querySelector("#move-to-center").onclick = function (ev) {
   moveToCenter(map.getCenter(), true);
-}
+};
 
 if (gps_references) {
   //Already have references, add them here
 } else {
   moveToCenter(map.getCenter(), true);
 }
+
 // const image_overlay = L.imageOverlay(image_src, [[55.711, 13.21], [55.711969, 13.215357]], {opacity: 0.7}).addTo(map);
 
 // window.image_tag = image_tag;
