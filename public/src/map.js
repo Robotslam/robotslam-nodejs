@@ -34,11 +34,21 @@ var marker1 = L.marker(topleft, {draggable: true, icon: working_icon} ).addTo(ma
     marker4 = L.marker(topleft, {draggable: true, icon: working_icon} ).addTo(map);
 
 var overlay = L.imageOverlay.rotated(image_src, topleft, topright, bottomleft, {
-    opacity: 0.6,
+    opacity: 0.9,
     interactive: true,
     attribution: "&copy; <a href='http://robot.oscarhinton.com'>The RobotSLAM Office</a>"
 });
 overlay.addTo(map);
+
+L.micello.loader.on("indoorReady", function (e) {
+  community = L.micello.community(11858, {
+    key: "hmtllTp8kPFOPy0FZKOH6kU7nHO5Ep",
+    centerCommunity: true
+  }).addTo(map);
+  map.on('click', function(e){
+    setSelectedLocation(e.latlng);
+  });
+});
 
 function moveToCenter(center, no_repos_center) {
   const map_width_meters = image_tag.naturalWidth * resolution;
