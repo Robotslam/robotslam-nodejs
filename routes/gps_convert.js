@@ -44,25 +44,29 @@ router.post('/fit_on_map', function (req, res, next) {
 function storeImage(data) {
   return Promise.resolve()
     .then(() => {
-      return fs.writeFile('/tmp/map_image.pgm', data);
-    })
-    .then(() => {
+      const buffer = new Buffer(data);
+
       return new Promise((fulfill, reject) => {
-        gm('/tmp/map_image.pgm')
-          .transparent('#CDCDCD')
-          .write('/tmp/map_image.png', function (err) {
-            if (err) {
-              return reject(err);
-            }
-            return fulfill(err);
-          });
+        const img = gm(buffer, 'image.pgm')
+          .transparent('#CDCDCD');
+
+        // TODO: Remove?
+        img.write('/tmp/map_image.png', (err) => {
+          if (err) {
+            console.error(err);
+          }
+        });
+
+        img.toBuffer('PNG', (err, buffer) => {
+          if (err) {
+            return reject(err);
+          }
+          return fulfill(buffer);
+        });
       });
     })
-    .then(() => {
-      return fs.readFile('/tmp/map_image.png');
-    })
     .then((image) => {
-      return new Buffer(image).toString('base64');
+      return image.toString('base64');
     });
 }
 
