@@ -5,4 +5,10 @@ block content
   div(hidden='hidden')
     img#map-image(src=map_image_data, data-gps-references=gps_references, data-origin=origin, data-resolution=resolution)
   #map
+
+  form#map-submit
+    input.form-control(name='coordinates', type='hidden')
+    .form-group
+      input.btn.btn-primary(type='submit', value='Submit Map')
+
   a.btn.btn-secondary#move-to-center(href='#') Move map to center
