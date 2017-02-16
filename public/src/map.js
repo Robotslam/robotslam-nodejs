@@ -73,7 +73,7 @@ if (document.getElementById('map') !== null) {
     const out = {
       topleft: overlay._topLeft,
       topright: overlay._topRight,
-      bottomleft: overlay._bottomLight,
+      bottomleft: overlay._bottomLeft,
     };
 
     input.value = JSON.stringify(out);
