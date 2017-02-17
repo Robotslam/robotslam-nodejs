@@ -1,3 +1,10 @@
+const crypto = require('crypto');
+const config = require('config');
+const csv_string = require('./csv_string');
+
+const KEY = config.get('export.key');
+const SALT = config.get('export.salt');
+
 /**
  * Accepts the WiFi scan message, and formats it into correct csv format
  *
@@ -7,26 +14,56 @@ function exportCsv(msg) {
 
   const out = [];
 
+  let p = Promise.resolve();
+
+  let i = 1;
+
   // Iterate over each measurement time
   msg.forEach((m) => {
 
     // Ensure we actually have some data to export
     if (m.measurements.length <= 0) {
-      return null;
+      return;
     }
 
-    const timestamp = stampToTimestamp(m.stamp);
-
-    const measurements = m.measurements.map(formatMeasurement(timestamp));
-    //console.log(measurements);
-
-    out.push(formatHeader(timestamp, m));
-    out.push(['AV', '1.0', 1]);
-    out.push([]);
-    out.push(...measurements);
-    out.push([]);
-    out.push(['-- New Line --']);
+    p = p.then(() => {
+      const formattedMsg = formatMsg(m);
+      return hash(formattedMsg, i++).then((h) => {
+        out.push(...formattedMsg);
+        out.push(h);
+        out.push(['-- New Line --']);
+      });
+    });
   });
+
+  return p.then(() => {
+    return out;
+  });
+}
+
+function hash(msg, i) {
+  return new Promise((resolve, reject) => {
+    const data = csv_string(msg);
+
+    const hmac = crypto.createHmac('sha256', KEY);
+    const o = hmac.update(`robotslamimei;${i};${data};${SALT}`).digest('hex');
+
+    resolve(['H', i, o]);
+  });
+}
+
+function formatMsg(m) {
+  const timestamp = stampToTimestamp(m.stamp);
+
+  const measurements = m.measurements.map(formatMeasurement(timestamp));
+
+  const out = [];
+
+  out.push(formatHeader(timestamp, m));
+  out.push(['AV', '1.0', 1]);
+  out.push([]);
+  out.push(...measurements);
+  out.push([]);
 
   return out;
 }

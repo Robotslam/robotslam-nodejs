@@ -58,9 +58,13 @@ router.post('/', function (req, res, next) {
         //strToSend += transformedPoint.x + ',' + transformedPoint.y + '\n';
       }
       //res.send(strToSend);
-      csv_string(exportCsv(data)).then((output) => {
-        res.send(output);
-      });
+      exportCsv(data)
+        .then((d) => {
+          return csv_string(d);
+        })
+        .then((output) => {
+          res.send(output);
+        });
       //   };
       // });
     }
@@ -100,8 +104,8 @@ router.post('/visualize', function (req, res, next) {
       }
       //res.send(strToSend);
       /*csv_string(exportCsv(parsedJson)).then((output) => {
-        res.send(output);
-      });*/
+       res.send(output);
+       });*/
       //   };
       // });
 
