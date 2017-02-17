@@ -3,11 +3,14 @@ extends layout
 block content
   h1= title
 
-  form(method="post")
+  form(method="post" enctype='multipart/form-data')
     .form-group
       label(for="file") File
       select#file.form-control.custom-select(name="file")
         for item in files
           option #{item}
+    .form-group
+      label(for="map_description") Map description (.yaml)
+      input.form-control-file(type='file' name='map_description', accept='.yaml')
     .form-group
       input.btn.btn-primary(type="submit", value="Download CSV")
