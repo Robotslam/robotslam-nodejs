@@ -42,14 +42,13 @@ function exportCsv(msg) {
 }
 
 function hash(msg, i) {
-  return new Promise((resolve, reject) => {
-    const data = csv_string(msg);
+  return csv_string(msg)
+    .then((data) => {
+      const hmac = crypto.createHmac('sha256', KEY);
+      const o = hmac.update(`robotslamimei;${i};${data};${SALT}`).digest('hex');
 
-    const hmac = crypto.createHmac('sha256', KEY);
-    const o = hmac.update(`robotslamimei;${i};${data};${SALT}`).digest('hex');
-
-    resolve(['H', i, o]);
-  });
+      return ['H', i, o];
+    });
 }
 
 function formatMsg(m) {
