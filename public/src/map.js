@@ -56,7 +56,6 @@ if (document.getElementById('map') !== null) {
   overlay.addTo(map);
 
   document.querySelector('#map-submit').onsubmit = (e) => {
-    e.preventDefault();
 
     const input = document.querySelector('input[name="coordinates"]');
 
@@ -115,18 +114,6 @@ if (document.getElementById('map') !== null) {
   marker3.on('drag dragend', repositionImageAfterMarkers);
   marker4.on('drag', repositionImageAfterCenterMarker);
 
-// let center = null;
-// let corner = null;
-// /*let center = new L.marker([55.711958, 13.215353], {
-//     draggable: true,
-//     icon: working_icon
-// }).addTo(map);
-
-// let corner = new L.marker([55.711958, 13.215353], {
-//     draggable: true,
-//     icon: working_icon
-// }).addTo(map);*/
-
   document.querySelector("#move-to-center").onclick = function (ev) {
     moveToCenter(map.getCenter(), true);
   };
@@ -136,49 +123,4 @@ if (document.getElementById('map') !== null) {
   } else {
     moveToCenter(map.getCenter(), true);
   }
-
-// const image_overlay = L.imageOverlay(image_src, [[55.711, 13.21], [55.711969, 13.215357]], {opacity: 0.7}).addTo(map);
-
-// window.image_tag = image_tag;
-
-// if (gps_references) {
-//   //Already have references, add them here
-// } else {
-//   center = new L.marker([start_lng, start_lat], {
-//       draggable: true,
-//       icon: working_icon
-//   }).addTo(map);
-
-//   const map_width_meters = image_tag.naturalWidth * resolution[0];
-//   const map_height_meters = image_tag.naturalHeight * resolution[1];
-
-//   // Get the y,x dimensions of the map
-//   const y = map.getSize().y,
-//         x = map.getSize().x;
-//   // calculate the distance the one side of the map to the other using the haversine formula
-//   const max_meters = map.containerPointToLatLng([0, y]).distanceTo( map.containerPointToLatLng([x,y]));
-//   // calculate how many meters each pixel represents
-//   const pixel_per_meter = x/max_meters;
-
-//   corner = new L.marker([start_lng + 0.001, start_lat + 0.001], {
-//     draggable: true,
-//     icon: working_icon
-//   }).addTo(map);
-
-//   corner.on('drag', function (ev) {
-//     // Object { originalEvent: mousemove, type: "drag", target: Object, latlng: Object, oldLatLng: Object }
-
-//   });
-// }
-
-// function updateImageOverlay() {
-//   corner.getLatLng()
-//   center.getLatLng()
-//   imageBounds = [center.getLatLng(), [55.711969, 13.215357]];
-//   image_overlay.setBounds(<LatLngBounds> bounds)
-// }
-
-// /*var imageUrl = 'http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg',
-//     imageBounds = [[55.711, 13.21], [55.711969, 13.215357]];*/
-
 }
