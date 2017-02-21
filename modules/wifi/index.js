@@ -8,8 +8,7 @@ class WiFiScanner {
     this.topic = new roslib.Topic({
       ros: this._ros,
       name: '/wifi_scanner/data_filtered_array',
-      messageType: 'wifi_scan' +
-      'ner/WifiMeasurementArray'
+      messageType: 'wifi_scanner/WifiMeasurementArray'
     });
   }
 

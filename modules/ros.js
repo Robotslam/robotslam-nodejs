@@ -1,6 +1,7 @@
 const URL = require('url-parse');
 const roslib = require('roslib');
-const WiFiScanner = require('./wifi/index');
+const WiFiScanner = require('./wifi');
+const MapListener = require('./map');
 
 class RosManager {
 
@@ -26,6 +27,7 @@ class RosManager {
     this.active = false;
 
     this.wifiScanner = new WiFiScanner(this.ros);
+    this.mapListener = new MapListener(this.ros);
   }
 
   start() {
@@ -35,6 +37,7 @@ class RosManager {
 
     this.active = true;
     this.wifiScanner.start();
+    this.mapListener.start();
   }
 
   stop() {
