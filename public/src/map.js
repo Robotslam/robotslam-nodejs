@@ -32,16 +32,6 @@ if (document.getElementById('map') !== null) {
     });
   });
 
-  const working_icon = new L.Icon({
-    iconUrl: require('../images/marker-icon.png'),
-    iconAnchor: new L.Point(12, 41)
-    // iconSize:    [25, 41],
-    // iconAnchor:  [12, 41],
-    // popupAnchor: [1, -34],
-    // tooltipAnchor: [16, -28],
-    // shadowSize: [41, 41]
-  });
-
   const image_tag = document.querySelector("#map-image");
   window.image_tag = image_tag;
   const image_src = image_tag.getAttribute("src");
@@ -53,10 +43,10 @@ if (document.getElementById('map') !== null) {
     topright = L.latLng(40.5210255066156, -3.7734764814376835),
     bottomleft = L.latLng(40.52180437272552, -3.7768453359603886);
 
-  const marker1 = L.marker(topleft, {draggable: true, icon: working_icon}).addTo(map),
-    marker2 = L.marker(topright, {draggable: true, icon: working_icon}).addTo(map),
-    marker3 = L.marker(bottomleft, {draggable: true, icon: working_icon}).addTo(map),
-    marker4 = L.marker(topleft, {draggable: true, icon: working_icon}).addTo(map);
+  const marker1 = L.marker(topleft, {draggable: true}).addTo(map),
+    marker2 = L.marker(topright, {draggable: true}).addTo(map),
+    marker3 = L.marker(bottomleft, {draggable: true}).addTo(map),
+    marker4 = L.marker(topleft, {draggable: true}).addTo(map);
 
   const overlay = L.imageOverlay.rotated(image_src, topleft, topright, bottomleft, {
     opacity: 1,

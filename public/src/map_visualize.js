@@ -33,15 +33,6 @@ if (document.getElementById('map-visualize') !== null) {
 
   const coords = JSON.parse(document.getElementById('visualize-data').innerText);
 
-  const working_icon = new L.Icon({
-    iconUrl: require('../images/marker-icon.png'),
-    iconAnchor: new L.Point(12, 41)
-    // iconSize:    [25, 41],
-    // iconAnchor:  [12, 41],
-    // popupAnchor: [1, -34],
-    // tooltipAnchor: [16, -28],
-    // shadowSize: [41, 41]
-  });
   /*window.working_icon = working_icon;
   window.coord = coords[0];
   L.marker(coords[0], {icon: working_icon}).addTo(map);*/
