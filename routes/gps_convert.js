@@ -12,34 +12,28 @@ router.get('/', function (req, res, next) {
   });
 });
 
-router.post('/fit_on_map', function (req, res, next) {
+router.post('/fit_on_map', async (req, res, next) => {
   if (!req.files) {
     res.status(400).send('No files were uploaded.');
     return;
   }
 
-  return Promise
-    .all([
+  const [, imageData] = await Promise.all([
       fs.writeFile('/tmp/map_description.yaml', req.files.map_description.data),
       storeImage(req.files.map_image.data)
-    ])
-    .then((data) => {
-      const image = data[1].image;
-      const description = yaml.safeLoad(req.files.map_description.data);
-      description.image_size = data[1].size;
+    ]);
 
-      res.render('gps_convert/fit_on_map', {
-        title: 'Fit on map',
-        map_image_data: 'data:image/x-portable-graymap;base64,' + image,
-        gps_references: description.gps_references,
-        origin: description.origin,
-        resolution: description.resolution,
-        yaml: yaml.safeDump(description)
-      });
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send(err);
+    const image = imageData.image;
+    const description = yaml.safeLoad(req.files.map_description.data);
+    description.image_size = imageData.size;
+
+    res.render('gps_convert/fit_on_map', {
+      title: 'Fit on map',
+      map_image_data: 'data:image/x-portable-graymap;base64,' + image,
+      gps_references: description.gps_references,
+      origin: description.origin,
+      resolution: description.resolution,
+      yaml: yaml.safeDump(description)
     });
 });
 
