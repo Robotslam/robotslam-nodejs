@@ -66,9 +66,9 @@ router.post('/download', function (req, res, next) {
 
 async function storeImage(data) {
   data = await getPng(data);
-  data = await addSizeDataToImage(data);
+  size = await getSize(data);
   return {
-    size: data.size,
+    size,
     image: data.buffer.toString('base64')
   };
 }
@@ -100,7 +100,7 @@ async function getPng(data) {
   });
 }
 
-async function addSizeDataToImage(data) {
+async function getSize(data) {
   return new Promise((resolve, reject) => {
     data.img.size((err, size) => {
       if (err) {
@@ -108,7 +108,7 @@ async function addSizeDataToImage(data) {
         return reject(err);
       }
 
-      return resolve({size, buffer: data.buffer});
+      return resolve(size);
     });
   });
 }
