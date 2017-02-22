@@ -64,52 +64,53 @@ router.post('/download', function (req, res, next) {
   res.send(yaml.safeDump(description));
 });
 
-function storeImage(data) {
-  return Promise.resolve()
-    .then(() => {
-      const buffer = new Buffer(data);
-
-      return new Promise((resolve, reject) => {
-        const img = gm(buffer, 'image.pgm')
-          .transparent(config.get('image.transparent'));
-
-        // TODO: Remove?
-        img.write('/tmp/map_image.png', (err) => {
-          if (err) {
-            console.error(err);
-          }
-        });
-
-        img.toBuffer('PNG', (err, buffer) => {
-          if (err) {
-            return reject(err);
-          }
-          return resolve({img, buffer});
-        });
-      });
-    })
-    .then((data) => {
-      return new Promise((resolve, reject) => {
-        data.img.size((err, size) => {
-          if (err) {
-            console.error(err);
-            return reject(err);
-          }
-
-          return resolve({size, buffer: data.buffer});
-        });
-      });
-    })
-    .then((data) => {
-      return {
-        size: data.size,
-        image: data.buffer.toString('base64')
-      };
-    });
+async function storeImage(data) {
+  data = await getPng(data);
+  data = await addSizeDataToImage(data);
+  return {
+    size: data.size,
+    image: data.buffer.toString('base64')
+  };
 }
 
 function round(number) {
   return Math.round(number * 1e2) / 1e2;
+}
+
+async function getPng(data) {
+  const buffer = new Buffer(data);
+
+  return new Promise((resolve, reject) => {
+    const img = gm(buffer, 'image.pgm')
+      .transparent(config.get('image.transparent'));
+
+    // TODO: Remove?
+    img.write('/tmp/map_image.png', (err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+
+    img.toBuffer('PNG', (err, buffer) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve({img, buffer});
+    });
+  });
+}
+
+async function addSizeDataToImage(data) {
+  return new Promise((resolve, reject) => {
+    data.img.size((err, size) => {
+      if (err) {
+        console.error(err);
+        return reject(err);
+      }
+
+      return resolve({size, buffer: data.buffer});
+    });
+  });
 }
 
 module.exports = router;
