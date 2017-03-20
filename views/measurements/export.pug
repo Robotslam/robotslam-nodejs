@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+  h1= title
+
+  p= `Exporting: ${measurement.id}`
+
+  form#form-visualize(method="post" enctype='multipart/form-data')
+    .form-group
+      label(for="map_description") Map description (.yaml)
+      input.form-control-file(type='file' name='map_description', accept='.yaml')
+    .form-group.row
+      .col
+        input.btn.btn-primary(type="submit", value="Download CSV")
+      .col
+        a#submit-visualize.btn.btn-secondary(href='#') Visualize
+
+  script(type='text/javascript').
+    document.querySelector('#submit-visualize').onclick = function () {
+      const form = document.querySelector('#form-visualize');
+      form.action = '/export/visualize';
+      form.submit();
+    };

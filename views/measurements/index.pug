@@ -8,8 +8,11 @@ block content
       tr
         th #
         th Collected At
+        th
     tbody
       each m in measurements
         tr
           td= m.id
           td= m.created_at
+          td
+            a.btn.btn-outline-primary(href=`/measurements/${m.id}/export`) Export
