@@ -22,9 +22,11 @@
     "morgan": "~1.7.0",
     "netpbm": "^1.1.1",
     "node-base64-image": "^1.0.3",
+    "pg": "^6.1.4",
     "pug": "~2.0.0-beta10",
     "regression": "^1.4.0",
     "roslib": "github:robotwebtools/roslibjs#master",
+    "sequelize": "^3.30.2",
     "serve-favicon": "~2.3.2",
     "transformation-matrix-js": "^2.7.1",
     "url-parse": "^1.1.7"
