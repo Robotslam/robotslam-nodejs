@@ -7,8 +7,8 @@ block content
 
   form#form-visualize(method="post" enctype='multipart/form-data')
     .form-group
-      label(for="map_description") Map description (.yaml)
-      input.form-control-file(type='file' name='map_description', accept='.yaml')
+      label(for='map_description') Map description (.yaml)
+      input.form-control-file(type='file' id='map_description' name='map_description', accept='.yaml')
     .form-group.row
       .col
         input.btn.btn-primary(type="submit", value="Download CSV")
@@ -18,6 +18,6 @@ block content
   script(type='text/javascript').
     document.querySelector('#submit-visualize').onclick = function () {
       const form = document.querySelector('#form-visualize');
-      form.action = '/export/visualize';
+      form.action = window.location.pathname + '/visualize';
       form.submit();
     };

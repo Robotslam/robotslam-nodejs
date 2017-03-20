@@ -39,4 +39,25 @@ router.post('/:id/export', async (req, res) => {
   res.send(output);
 });
 
+router.post('/:id/export/visualize', async (req, res) => {
+
+  const points = await models.measurementPoint.findAll({
+    include: [models.measurementPointWifi]
+  });
+
+  const description = yaml.load(req.files.map_description.data);
+  const transformer = new Transformer(description);
+  const coords = [];
+
+  points.forEach((point) => {
+    transformedPoint = transformer.transformPoint(point.x, point.y);
+    coords.push([transformedPoint.x, transformedPoint.y]);
+  });
+
+  res.render('export_visualize', {
+    title: 'Export',
+    coords: JSON.stringify(coords)
+  });
+});
+
 module.exports = router;
