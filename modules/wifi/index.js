@@ -15,9 +15,7 @@ class WiFiScanner {
   }
 
   async start() {
-
-    //this.messages = [];
-
+    //noinspection JSUnresolvedVariable
     const measurement = await models.measurement.create({});
 
     this.topic.subscribe((msg) => {
@@ -29,13 +27,6 @@ class WiFiScanner {
 
   stop() {
     this.topic.unsubscribe();
-
-    const currentDate = new Date();
-    const filename = currentDate.getTime();
-
-    fs.writeFile('data/raw/' + filename + '.json', JSON.stringify(this.messages), (err) => {
-      if (err) throw err;
-    });
   }
 
   async storeMessage(measurement, msg) {
@@ -62,8 +53,8 @@ function formatMeasurement(timestamp, val) {
     const age = timestamp - WiFiScanner.stampToTimestamp(val.stamp);
     return {
       bssid: val.bssid, // BSSID
-      ssid: val.ssid,  // SSID
-      rssi: val.rssi,  // RSSID
+      ssid: val.ssid,   // SSID
+      rssi: val.rssi,   // RSSID
       age: age
     };
   }
