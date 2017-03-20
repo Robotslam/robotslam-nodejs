@@ -1,7 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   const measurement = sequelize.define('measurement', {
-    test: DataTypes.STRING
   }, {
     tableName: 'measurement',
     underscored: true,

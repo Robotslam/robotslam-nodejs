@@ -1,0 +1,15 @@
+extends ../layout
+
+block content
+  h1= title
+
+  table.table.table-bordered
+    thead
+      tr
+        th #
+        th Collected At
+    tbody
+      each m in measurements
+        tr
+          td= m.id
+          td= m.created_at
