@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+  h1= `Viewing ${title}`
+
+  h2 Maps
+  table.table
+    thead
+      tr
+        th #
+        th Created At
+        th
+    tbody
+      each m in building.maps
+        tr
+          td= m.id
+          td= m.created_at
+          td
+            a.btn.btn-outline-primary(href=`/buildings/${building.id}/maps/${m.id}`) View
