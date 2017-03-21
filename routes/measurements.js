@@ -1,17 +1,27 @@
 const express = require('express');
-const router = express.Router();
 const yaml = require('js-yaml');
 const models = require('../models');
 const Transformer = require('../modules/transformer');
 const exportCsv = require('../modules/wifi/export2');
 
+const router = express.Router();
+
+
 router.get('/', async function (req, res) {
   //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-  const measurements = await models.measurement.findAll();
+  const measurements = await models.measurement.findAll({
+    attributes: ['id', 'created_at', [models.sequelize.fn('COUNT', 'measurementPoints.id'), 'items']],
+    include: [{
+      attributes: [],
+      model: models.measurementPoint,
+      group: ['measurement_id']
+    }],
+    group: ['measurement.id']
+  });
 
   res.render('measurements/index', {
     title: 'Measurements',
-    measurements: measurements,
+    measurements: measurements.map((m) => m.get()),
   });
 });
 
@@ -24,7 +34,7 @@ router.get('/:id/export', async function (req, res) {
   });
 });
 
-router.post('/:id/export', async (req, res) => {
+router.post('/:id/export', async(req, res) => {
 
   const points = await models.measurementPoint.findAll({
     include: [models.measurementPointWifi]
@@ -39,7 +49,7 @@ router.post('/:id/export', async (req, res) => {
   res.send(output);
 });
 
-router.post('/:id/export/visualize', async (req, res) => {
+router.post('/:id/export/visualize', async(req, res) => {
 
   const points = await models.measurementPoint.findAll({
     include: [models.measurementPointWifi]
