@@ -1,6 +1,7 @@
 const fs = require('fs');
 const roslib = require('roslib');
 const Jimp = require('jimp');
+const models = require('../../models');
 
 class MapListener {
   constructor(ros) {
@@ -13,32 +14,27 @@ class MapListener {
     });
   }
 
-  start() {
-
-    this.messages = [];
-
+  save() {
+    console.log('Waiting for map data');
     this.topic.subscribe((msg) => {
-      this.messages.push(msg);
-      console.log(msg);
+      console.log('Got map data, saving...');
+      // Since we only want to store the map once, quit listening after
+      this.topic.unsubscribe();
 
-      saveImage(msg);
+      saveNewMap(msg);
     });
   }
-
-  stop() {
-    this.topic.unsubscribe();
-
-    const currentDate = new Date();
-    const filename = currentDate.getTime();
-
-    fs.writeFile('data/raw/' + filename + '.json', JSON.stringify(this.messages), (err) => {
-      if (err) throw err;
-    });
-  }
-
 }
 
-function saveImage(msg) {
+async function saveNewMap(msg) {
+  const map = await models.map.create({
+    resolution: msg.info.resolution,
+    width: msg.info.width,
+    height: msg.info.height,
+    origin_x: msg.info.origin.position.x,
+    origin_y: msg.info.origin.position.y,
+    origin_yaw: 0, // Harcoded value, we assume that yaw is always 0
+  });
 
   const image = new Jimp(msg.info.width, msg.info.height);
 
@@ -66,8 +62,7 @@ function saveImage(msg) {
     }
   }
 
-  image.write('test.png');
-  console.log('Wrote image to disk');
+  image.write(`data/maps/${map.id}.png`);
 }
 
 module.exports = MapListener;

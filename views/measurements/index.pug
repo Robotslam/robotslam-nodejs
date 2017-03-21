@@ -18,3 +18,9 @@ block content
           td= m.created_at
           td
             a.btn.btn-outline-primary(href=`/measurements/${m.id}/export`) Export
+
+  #buttton
+    if active
+      a.btn.btn-primary(href='/toggle/stop') Stop
+    else
+      a.btn.btn-primary(href='/toggle/start') Start

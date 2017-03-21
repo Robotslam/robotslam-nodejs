@@ -3,9 +3,9 @@ const yaml = require('js-yaml');
 const models = require('../models');
 const Transformer = require('../modules/transformer');
 const exportCsv = require('../modules/wifi/export2');
+const ros = require('../modules/ros');
 
 const router = express.Router();
-
 
 router.get('/', async function (req, res) {
   //noinspection JSUnresolvedVariable,JSUnresolvedFunction
@@ -16,11 +16,13 @@ router.get('/', async function (req, res) {
       model: models.measurementPoint,
       group: ['measurement_id']
     }],
+    order: [['id', 'asc']],
     group: ['measurement.id']
   });
 
   res.render('measurements/index', {
     title: 'Measurements',
+    active: ros.active,
     measurements: measurements.map((m) => m.get()),
   });
 });
