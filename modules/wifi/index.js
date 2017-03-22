@@ -6,8 +6,9 @@ const models = require('../../models');
 class WiFiScanner {
   constructor(ros) {
     this._ros = ros;
+    this._callback = null;
 
-    this.topic = new roslib.Topic({
+    this._topic = new roslib.Topic({
       ros: this._ros,
       name: '/wifi_scanner/data_filtered_array',
       messageType: 'wifi_scanner/WifiMeasurementArray'
@@ -15,18 +16,23 @@ class WiFiScanner {
   }
 
   async start() {
+    if (this._callback !== null) {
+      throw "WiFiScanner is already started. Please call stop() before attempting to call start().";
+    }
+
     //noinspection JSUnresolvedVariable
     const measurement = await models.measurement.create({});
-
-    this.topic.subscribe((msg) => {
+    this._callback = (msg) => {
       this
         .storeMessage(measurement, msg)
         .catch((err) => console.error(err));
-    });
+    };
+    this._topic.subscribe(this._callback);
   }
 
   stop() {
-    this.topic.unsubscribe();
+    this._topic.unsubscribe(this._callback);
+    this._callback = null;
   }
 
   async storeMessage(measurement, msg) {
