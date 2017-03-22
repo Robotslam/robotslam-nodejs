@@ -16,7 +16,7 @@ router.get('/', async function (req, res) {
       model: models.measurementPoint,
       group: ['measurement_id']
     }],
-    order: [['id', 'asc']],
+    order: [['id', 'desc']],
     group: ['measurement.id']
   });
 
@@ -39,7 +39,8 @@ router.get('/:id/export', async function (req, res) {
 router.post('/:id/export', async(req, res) => {
 
   const points = await models.measurementPoint.findAll({
-    include: [models.measurementPointWifi]
+    include: [models.measurementPointWifi],
+    order: [['id', 'desc']]
   });
 
   const description = yaml.load(req.files.map_description.data);
