@@ -2,10 +2,10 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    return queryInterface.addColumn('map', 'building_id', {
+    return queryInterface.addColumn('measurement', 'map_id', {
       type: Sequelize.INTEGER,
       references: {
-        model: 'building'
+        model: 'measurement'
       },
       onUpdate: 'cascade',
       onDelete: 'cascade'
@@ -13,6 +13,6 @@ module.exports = {
   },
 
   down: function (queryInterface, Sequelize) {
-    return queryInterface.removeColumn('map', 'building_id');
+    return queryInterface.removeColumn('measurement', 'map_id');
   }
 };

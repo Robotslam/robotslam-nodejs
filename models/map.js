@@ -14,6 +14,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Map.belongsTo(models.building);
+        Map.hasMany(models.measurement)
       }
     }
   });

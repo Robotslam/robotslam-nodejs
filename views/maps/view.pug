@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+  h1= `Viewing ${title}`
+
+  .row
+    .col.col-6
+      #map-image
+        img(src=`/data/maps/${map.id}.png`)
+    .col.col-6
+        ul
+          li= `Width: ${map.width}`
+          li= `Height: ${map.height}`
+          li= `Resolution: ${map.resolution}`
+          li= `Origin: (${map.origin_x} ${map.origin_y} ${map.origin_yaw})`
+
+        a.btn.btn-outline-primary(href='') Edit reference points
+
+  h2 Measurements
+
+  table.table
+    thead
+      tr
+        th #
+        th Collected At
+        th
+    tbody
+      each m in map.measurements
+        tr
+          td= m.id
+          td= m.created_at
+          td
+            .btn-group
+              a.btn.btn-sm.btn-outline-secondary View
+              a.btn.btn-sm.btn-outline-secondary Export
+

@@ -22,3 +22,12 @@ body {
   margin-bottom: 15px;
 }
 
+#map-image {
+  width: 350px;
+  display: block;
+  border: 1px solid #ccc;
+
+  img {
+    width: 100%;
+  }
+}

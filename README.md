@@ -2,6 +2,10 @@
 
 This is the RobotSlam Server, written in Node.JS.
 
+## Requirements
+* Node v7
+* Postgres v9.5
+
 ## Development
 
 To start express run `npm start`.

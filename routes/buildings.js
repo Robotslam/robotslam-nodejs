@@ -1,7 +1,10 @@
 const express = require('express');
 const models = require('../models');
+const mapRouter = require('./buildings/map')
 
 const router = express.Router();
+
+router.use('/:id/maps', mapRouter);
 
 router.get('/', async function (req, res) {
   //noinspection JSUnresolvedVariable,JSUnresolvedFunction
@@ -36,8 +39,6 @@ router.get('/:id', async function (req, res) {
     },
     include: [models.map]
   });
-
-  console.dir(building.get());
 
   res.render('buildings/view', {
     title: building.name,
