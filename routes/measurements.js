@@ -40,7 +40,8 @@ router.get('/:id', async function (req, res) {
           model: models.measurementPointWifi
         }]
       }
-    ]
+    ],
+    order: [[ models.measurementPoint, 'time', 'asc' ]],
   });
 
   const map = measurement.map;
