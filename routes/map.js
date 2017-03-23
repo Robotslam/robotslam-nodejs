@@ -39,6 +39,7 @@ router.get('/:map/update', async function (req, res) {
   res.render('maps/fit_on_map', {
     title: 'Fit on map',
     map: req.map,
+    gps_references: req.map.references
   });
 });
 

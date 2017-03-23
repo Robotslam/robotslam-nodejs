@@ -35,8 +35,8 @@ if (document.getElementById('map') !== null) {
   const image_tag = document.querySelector("#map-image");
   window.image_tag = image_tag;
   const image_src = image_tag.getAttribute("src");
-  const gps_references = eval(image_tag.getAttribute('data-gps-references'));
-  const resolution = eval(image_tag.getAttribute('data-resolution'));
+  const gps_references = JSON.parse(image_tag.getAttribute('data-gps-references'));
+  const resolution = JSON.parse(image_tag.getAttribute('data-resolution'));
 
   const topleft = L.latLng(40.52256691873593, -3.7743186950683594),
     topright = L.latLng(40.5210255066156, -3.7734764814376835),
@@ -117,8 +117,10 @@ if (document.getElementById('map') !== null) {
     moveToCenter(map.getCenter(), true);
   };
 
-  if (gps_references) {
-    //Already have references, add them here
+  if (gps_references.length == 3) {
+    marker1.setLatLng(L.latLng(gps_references[0][0], gps_references[0][1]));
+    marker2.setLatLng(L.latLng(gps_references[1][0], gps_references[1][1]));
+    marker3.setLatLng(L.latLng(gps_references[2][0], gps_references[2][1]));
   } else {
     moveToCenter(map.getCenter(), true);
   }

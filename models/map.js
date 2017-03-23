@@ -1,5 +1,5 @@
 'use strict';
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   const Map = sequelize.define('map', {
     name: DataTypes.STRING,
     resolution: DataTypes.FLOAT,
@@ -16,16 +16,27 @@ module.exports = function(sequelize, DataTypes) {
     underscored: true,
     underscoredAll: true,
     getterMethods: {
-      origin: function() {
+      origin: function () {
         return [
           this.origin_x,
           this.origin_y,
           this.origin_yaw
         ];
+      },
+      references: function () {
+        if (this.ref_topleft === null || this.ref_topright === null || this.ref_bottomleft === null) {
+          return [];
+        }
+
+        return [
+          this.ref_topleft.coordinates,
+          this.ref_topright.coordinates,
+          this.ref_bottomleft.coordinates
+        ];
       }
     },
     classMethods: {
-      associate: function(models) {
+      associate: function (models) {
         Map.belongsTo(models.building);
         Map.hasMany(models.measurement)
       }
