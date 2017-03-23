@@ -18,8 +18,11 @@ body {
 }
 
 #map, #map-visualize {
-  height: 600px;
-  margin-bottom: 15px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 #map-image {
@@ -29,5 +32,18 @@ body {
 
   img {
     width: 100%;
+  }
+}
+
+form#map-submit {
+  background-color: desaturate(#0275d8, 75%);
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 15px;
+
+  .form-group {
+    margin: 0;
   }
 }
