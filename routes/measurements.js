@@ -10,13 +10,13 @@ const router = express.Router();
 router.get('/', async function (req, res) {
   //noinspection JSUnresolvedVariable,JSUnresolvedFunction
   const measurements = await models.measurement.findAll({
-    attributes: ['id', 'created_at', [models.sequelize.fn('COUNT', 'measurementPoints.id'), 'items']],
+    attributes: ['id', 'created_at'],
     include: [{
-      attributes: [],
-      model: models.measurementPoint,
-      group: ['measurement_id']
+      model: models.map,
+      include: [models.building],
+      required: false,
     }],
-    order: [['id', 'desc']],
+    order: [['id', 'asc']],
     group: ['measurement.id']
   });
 
@@ -24,6 +24,65 @@ router.get('/', async function (req, res) {
     title: 'Measurements',
     active: ros.active,
     measurements: measurements.map((m) => m.get()),
+  });
+});
+
+router.get('/:id', async function (req, res) {
+  const measurement = await models.measurement.find({
+    where: {
+      id: req.params.id,
+    },
+    include: [
+      models.map,
+      {
+        model: models.measurementPoint,
+        include: [{
+          model: models.measurementPointWifi
+        }]
+      }
+    ]
+  });
+
+  const map = measurement.map;
+
+  const description = {
+    origin: [map.origin_x, map.origin_y, map.origin_yaw],
+    gps_references: [
+      {
+        x: 0,
+        y: map.height * map.resolution,
+        lat: map.ref_topleft.coordinates[0],
+        lng: map.ref_topleft.coordinates[1],
+      },
+      {
+        x: map.width * map.resolution,
+        y: map.height * map.resolution,
+        lat: map.ref_topright.coordinates[0],
+        lng: map.ref_topright.coordinates[1],
+      },
+      {
+        x: 0,
+        y: 0,
+        lat: map.ref_bottomleft.coordinates[0],
+        lng: map.ref_bottomleft.coordinates[1],
+      }
+    ]
+  };
+
+  console.log(description);
+
+  const transformer = new Transformer(description);
+  const coords = [];
+
+  measurement.measurementPoints.forEach((point) => {
+    transformedPoint = transformer.transformPoint(point.x, point.y);
+    coords.push([transformedPoint.x, transformedPoint.y]);
+  });
+
+  res.render('measurements/view', {
+    title: 'Measurements',
+    measurement: measurement,
+    coords: JSON.stringify(coords)
   });
 });
 

@@ -36,7 +36,6 @@ if (document.getElementById('map') !== null) {
   window.image_tag = image_tag;
   const image_src = image_tag.getAttribute("src");
   const gps_references = eval(image_tag.getAttribute('data-gps-references'));
-  const origin = eval(image_tag.getAttribute('data-origin'));
   const resolution = eval(image_tag.getAttribute('data-resolution'));
 
   const topleft = L.latLng(40.52256691873593, -3.7743186950683594),

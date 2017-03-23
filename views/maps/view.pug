@@ -13,8 +13,13 @@ block content
           li= `Height: ${map.height}`
           li= `Resolution: ${map.resolution}`
           li= `Origin: (${map.origin_x} ${map.origin_y} ${map.origin_yaw})`
+          li Reference points:
+            ul
+              li= `TopLeft: ${map.ref_topleft.coordinates[0]}, ${map.ref_topleft.coordinates[1]}`
+              li= `TopRight: ${map.ref_topright.coordinates[0]}, ${map.ref_topright.coordinates[1]}`
+              li= `BottomLeft: ${map.ref_bottomleft.coordinates[0]}, ${map.ref_bottomleft.coordinates[1]}`
 
-        a.btn.btn-outline-primary(href='') Edit reference points
+        a.btn.btn-outline-primary(href=`/maps/${map.id}/update`) Edit reference points
 
   h2 Measurements
 
@@ -31,6 +36,5 @@ block content
           td= m.created_at
           td
             .btn-group
-              a.btn.btn-sm.btn-outline-secondary View
-              a.btn.btn-sm.btn-outline-secondary Export
-
+              a.btn.btn-sm.btn-outline-primary(href=`/measurements/${m.id}`) View
+              a.btn.btn-sm.btn-outline-primary(href=`/measurements/${m.id}/export`) Export

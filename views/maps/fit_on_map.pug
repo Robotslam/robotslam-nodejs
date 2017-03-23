@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  h1= title
+
+  div(hidden='hidden')
+    img#map-image(src=`/data/maps/${map.id}.png`, data-gps-references=gps_references, data-resolution=map.resolution)
+
+  #map
+
+  form#map-submit(method='post', action='/maps/9')
+    input.form-control(name='coordinates', type='hidden')
+    .form-group
+      .btn-group
+        input.btn.btn-primary(type='submit', value='Update reference points')
+        a.btn.btn-secondary#move-to-center(href='#') Move map to center

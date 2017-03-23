@@ -7,6 +7,7 @@ module.exports = function(sequelize, DataTypes) {
     underscoredAll: true,
     classMethods: {
       associate: function(models) {
+        measurement.belongsTo(models.map);
         measurement.hasMany(models.measurementPoint);
       }
     }
