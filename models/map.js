@@ -15,6 +15,15 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'map',
     underscored: true,
     underscoredAll: true,
+    getterMethods: {
+      origin: function() {
+        return [
+          this.origin_x,
+          this.origin_y,
+          this.origin_yaw
+        ];
+      }
+    },
     classMethods: {
       associate: function(models) {
         Map.belongsTo(models.building);
