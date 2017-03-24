@@ -40,4 +40,5 @@ if (document.getElementById('map-visualize') !== null) {
     L.marker(coord, {icon: working_icon}).addTo(map);
   });*/
   var polyline = L.polyline(coords, {color: 'red'}).addTo(map);
+  map.panTo(polyline.getBounds().getCenter());
 }
