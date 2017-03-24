@@ -135,8 +135,9 @@ router.get('/:id/export', async function (req, res) {
   const transformer = new Transformer(description);
   const output = await exportCsv(points, transformer);
 
-  //res.setHeader('content-disposition', 'attachment; filename=' + newFilename);
-  res.setHeader('content-type', 'text/plain');
+  //res.setHeader('Content-Disposition', 'attachment; filename=' + newFilename);
+  res.setHeader('Content-Disposition', `inline; filename=measurement_${req.params.id}.csv`);
+  res.setHeader('Content-Type', 'text/plain');
   res.send(output);
 });
 
