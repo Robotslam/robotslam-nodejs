@@ -88,22 +88,50 @@ router.get('/:id', async function (req, res) {
 });
 
 router.get('/:id/export', async function (req, res) {
-  const measurement = await models.measurement.find(res.id);
-
-  res.render('measurements/export', {
-    title: 'Measurements',
-    measurement: measurement
+  // duplicate code, maybe fix this when we add Oscars improved gps_references ref_topleft stuff.
+  const measurement = await models.measurement.find({
+    where: {
+      id: req.params.id,
+    },
+    include: [
+      models.map,
+      {
+        model: models.measurementPoint,
+        include: [{
+          model: models.measurementPointWifi
+        }]
+      }
+    ],
+    order: [[ models.measurementPoint, 'time', 'asc' ]],
   });
-});
 
-router.post('/:id/export', async(req, res) => {
+  const points = measurement.measurementPoints;
+  const map = measurement.map;
 
-  const points = await models.measurementPoint.findAll({
-    include: [models.measurementPointWifi],
-    order: [['id', 'desc']]
-  });
+  const description = {
+    origin: [map.origin_x, map.origin_y, map.origin_yaw],
+    gps_references: [
+      {
+        x: 0,
+        y: map.height * map.resolution,
+        lat: map.ref_topleft.coordinates[0],
+        lng: map.ref_topleft.coordinates[1],
+      },
+      {
+        x: map.width * map.resolution,
+        y: map.height * map.resolution,
+        lat: map.ref_topright.coordinates[0],
+        lng: map.ref_topright.coordinates[1],
+      },
+      {
+        x: 0,
+        y: 0,
+        lat: map.ref_bottomleft.coordinates[0],
+        lng: map.ref_bottomleft.coordinates[1],
+      }
+    ]
+  };
 
-  const description = yaml.load(req.files.map_description.data);
   const transformer = new Transformer(description);
   const output = await exportCsv(points, transformer);
 
