@@ -34,7 +34,8 @@ router.get('/:id', async function (req, res) {
     where: {
       id: req.params.id
     },
-    include: [models.map]
+    include: [models.map],
+    order: [[models.map, 'id', 'desc']]
   });
 
   res.render('buildings/view', {
