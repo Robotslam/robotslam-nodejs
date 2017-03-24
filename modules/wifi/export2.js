@@ -18,10 +18,10 @@ function exportCsv(points, transformer) {
 
   // Iterate over each measurement time
   points.forEach((point) => {
-
     // Ensure we actually have some data to export
     if (point.measurementPointWifis.length <= 0) {
-      return;
+      console.error(`Warning: Position #${i} does not contain any scans.`);
+      //return;
     }
 
     p = p.then(() => {
@@ -34,9 +34,15 @@ function exportCsv(points, transformer) {
     });
   });
 
-  return p.then(() => {
+  p = p.then(() => {
     return csv_string(out);
   });
+
+  p = p.catch((err) => {
+    console.error("REJECTED", err);
+  });
+
+  return p;
 }
 
 function hash(msg, i) {
@@ -93,7 +99,7 @@ function formatHeader(point, transformer) {
     'f',
     'f',
     0,
-    point.time, // Last scantime
+    point.time.getTime(), // Last scantime
     'robotslamimei', // Unique identifier for device
     'RobotSlam', // Application name
     '',
