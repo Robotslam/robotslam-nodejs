@@ -70,8 +70,6 @@ router.get('/:id', async function (req, res) {
     ]
   };
 
-  console.log(description);
-
   const transformer = new Transformer(description);
   const coords = [];
 
@@ -93,6 +91,10 @@ router.get('/:id/export', async function (req, res) {
     where: {
       id: req.params.id,
     },
+    // attributes: [
+    //   '*',
+    //   [models.sequelize.fn('extract', models.sequelize.query('epoch from time')), 'stamp']
+    // ],
     include: [
       models.map,
       {
