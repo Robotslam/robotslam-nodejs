@@ -99,8 +99,12 @@ if (document.getElementById('map') !== null) {
     }
   }
 
+  function getAverageCenter(topleft, topright, bottomleft) {
+    return (new L.LatLngBounds(topleft, topright).extend(bottomleft)).getCenter();
+  }
+
   function repositionCenterMarker(topleft, topright, bottomleft) {
-    marker4.setLatLng(new L.LatLngBounds(topleft, topright).extend(bottomleft).getCenter());
+    marker4.setLatLng(getAverageCenter(topleft, topright, bottomleft));
   }
 
   function repositionImageAfterCenterMarker(ev) {
@@ -112,15 +116,21 @@ if (document.getElementById('map') !== null) {
   marker2.on('drag dragend', repositionImageAfterMarkers);
   marker3.on('drag dragend', repositionImageAfterMarkers);
   marker4.on('drag', repositionImageAfterCenterMarker);
-
   document.querySelector("#move-to-center").onclick = function (ev) {
     moveToCenter(map.getCenter(), true);
   };
 
   if (gps_references.length == 3) {
-    marker1.setLatLng(L.latLng(gps_references[0][0], gps_references[0][1]));
-    marker2.setLatLng(L.latLng(gps_references[1][0], gps_references[1][1]));
-    marker3.setLatLng(L.latLng(gps_references[2][0], gps_references[2][1]));
+    // For some reason I can't use marker1..3 in getAverageCenter
+    ll1 = L.latLng(gps_references[0][0], gps_references[0][1]);
+    ll2 = L.latLng(gps_references[1][0], gps_references[1][1]);
+    ll3 = L.latLng(gps_references[2][0], gps_references[2][1]);
+    marker1.setLatLng(ll1);
+    marker2.setLatLng(ll2);
+    marker3.setLatLng(ll3);
+
+    repositionImageAfterMarkers();
+    map.panTo(getAverageCenter(ll1, ll2, ll3));
   } else {
     moveToCenter(map.getCenter(), true);
   }
