@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+  h1= title
+
+  form(method='post', action=`/maps/${map.id}`)
+    .form-group
+      label Name
+      input.form-control(type='text', name='name' value=map.name)
+
+    input.btn.btn-primary(type='submit', value='Update')
+    a.btn.btn-secondary(href=`/maps/${map.id}`) Cancel

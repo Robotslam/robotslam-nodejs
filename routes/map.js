@@ -35,7 +35,14 @@ router.get('/:map_id', async function (req, res) {
   });
 });
 
-router.get('/:map/update', async function (req, res) {
+router.get('/:map/edit', function (req, res) {
+  res.render('maps/edit', {
+    title: 'Edit - ' + req.map.name,
+    map: req.map,
+  });
+});
+
+router.get('/:map/update', function (req, res) {
   res.render('maps/fit_on_map', {
     title: 'Fit on map',
     map: req.map,
@@ -44,25 +51,33 @@ router.get('/:map/update', async function (req, res) {
 });
 
 router.post('/:map', async function (req, res) {
-  const coordinates = JSON.parse(req.body.coordinates);
 
-  req.map.update({
-    ref_topleft: {
-      type: 'point',
-      coordinates: [coordinates.topleft.lat, coordinates.topleft.lng]
-    },
-    ref_topright: {
-      type: 'point',
-      coordinates: [coordinates.topright.lat, coordinates.topright.lng]
-    },
-    ref_bottomleft: {
-      type: 'point',
-      coordinates: [coordinates.bottomleft.lat, coordinates.bottomleft.lng]
-    },
-  });
+  if (req.body.coordinates) {
+    const coordinates = JSON.parse(req.body.coordinates);
+
+    req.map.update({
+      ref_topleft: {
+        type: 'point',
+        coordinates: [coordinates.topleft.lat, coordinates.topleft.lng]
+      },
+      ref_topright: {
+        type: 'point',
+        coordinates: [coordinates.topright.lat, coordinates.topright.lng]
+      },
+      ref_bottomleft: {
+        type: 'point',
+        coordinates: [coordinates.bottomleft.lat, coordinates.bottomleft.lng]
+      },
+    });
+  } else {
+    req.map.update({
+      name: req.body.name
+    });
+  }
 
   res.redirect('/maps/' + req.map.id);
-});
+})
+;
 
 router.get('/:map/yaml', async function (req, res) {
   const map = req.map;

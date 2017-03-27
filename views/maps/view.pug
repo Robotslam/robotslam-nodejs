@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  h1= `Viewing ${title}`
+  h1= `Viewing ${map.name}`
 
   .row
     .col.col-6
@@ -22,6 +22,7 @@ block content
 
         .btn-group
           a.btn.btn-outline-primary(href=`/maps/${map.id}/update`) Edit reference points
+          a.btn.btn-outline-primary(href=`/maps/${map.id}/edit`) Rename
           a.btn.btn-outline-success(href=`/maps/${map.id}/yaml`) Download Yaml file
 
   h2 Measurements
