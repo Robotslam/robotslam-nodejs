@@ -17,7 +17,6 @@ router.get('/', async function (req, res) {
       required: false,
     }],
     order: [['id', 'asc']],
-    group: ['measurement.id']
   });
 
   res.render('measurements/index', {
