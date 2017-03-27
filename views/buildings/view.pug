@@ -8,12 +8,14 @@ block content
     thead
       tr
         th #
+        th Name
         th Created At
         th
     tbody
       each m in building.maps
         tr
           td= m.id
+          td= m.name
           td= m.created_at
           td
             a.btn.btn-outline-primary(href=`/maps/${m.id}`) View
