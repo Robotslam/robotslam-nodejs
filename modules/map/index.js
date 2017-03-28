@@ -3,6 +3,8 @@ const roslib = require('roslib');
 const Jimp = require('jimp');
 const models = require('../../models');
 
+const imageDir = 'public/data/maps';
+
 class MapListener {
   constructor(ros) {
     this._ros = ros;
@@ -12,22 +14,29 @@ class MapListener {
       name: '/map',
       messageType: 'nav_msgs/OccupancyGrid',
     });
-  }
 
-  save() {
-    console.log('Waiting for map data');
-    this.topic.subscribe((msg) => {
+    this.map = null;
+
+    this.callback = (msg) => {
       console.log('Got map data, saving...');
-      // Since we only want to store the map once, quit listening after
-      this.topic.unsubscribe();
 
-      saveNewMap(msg);
-    });
+      // Since we only want to store the map once, quit listening after
+      this.topic.unsubscribe(this.callback);
+
+      saveNewMap(this.map, msg);
+    }
   }
+
+  save(map) {
+    this.map = map;
+
+    this.topic.subscribe(this.callback);
+  }
+
 }
 
-async function saveNewMap(msg) {
-  const map = await models.map.create({
+async function saveNewMap(map, msg) {
+  await map.update({
     resolution: msg.info.resolution,
     width: msg.info.width,
     height: msg.info.height,
@@ -62,7 +71,7 @@ async function saveNewMap(msg) {
     }
   }
 
-  image.write(`data/maps/${map.id}.png`);
+  image.write(`${imageDir}/${map.id}.png`);
 }
 
 module.exports = MapListener;

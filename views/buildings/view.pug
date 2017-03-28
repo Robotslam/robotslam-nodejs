@@ -20,4 +20,4 @@ block content
           td
             a.btn.btn-outline-primary(href=`/maps/${m.id}`) View
 
-  a.btn.btn-primary(href=`/buildings/${building.id}/explore`) Start new exploration
+  a.btn.btn-primary(href=`/buildings/${building.id}/explore`)= active ? 'Stop exploration' : 'Start new exploration'

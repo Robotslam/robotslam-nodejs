@@ -1,4 +1,5 @@
 const express = require('express');
+const ros = require('../modules/ros');
 const models = require('../models');
 
 const router = express.Router();
@@ -40,8 +41,25 @@ router.get('/:id', async function (req, res) {
 
   res.render('buildings/view', {
     title: building.name,
-    building: building.get()
+    building: building.get(),
+    active: ros.active
   });
+});
+
+router.get('/:id/explore', async function (req, res) {
+  const building = await models.building.findById(req.params.id);
+  if (building === null) {
+    res.status(404).render('404');
+  }
+
+  if (ros.active) {
+    ros.stop();
+  } else {
+    const map = await building.createMap({});
+    ros.explore(map);
+  }
+
+  res.redirect(`/buildings/${building.id}`);
 });
 
 module.exports = router;

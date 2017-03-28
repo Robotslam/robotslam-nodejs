@@ -15,13 +15,13 @@ class WiFiScanner {
     });
   }
 
-  async start() {
+  async start(map) {
     if (this._callback !== null) {
       throw "WiFiScanner is already started. Please call stop() before attempting to call start().";
     }
 
     //noinspection JSUnresolvedVariable
-    const measurement = await models.measurement.create({});
+    const measurement = await map.createMeasurement({});
     this._callback = (msg) => {
       this
         .storeMessage(measurement, msg)
