@@ -6,3 +6,9 @@ block content
   div(hidden='hidden')
     #visualize-data= coords
   #map-visualize
+
+  .map-bottom
+    .container
+      .btn-group
+        a.btn.btn-secondary(href=`/maps/${measurement.map.id}`) Back
+        a.btn.btn-success(href=`/measurements/${measurement.id}/export`) Export
