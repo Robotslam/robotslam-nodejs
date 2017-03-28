@@ -2,6 +2,7 @@ extends ../layout
 
 block content
   h1= title
+    a.btn.btn-sm.btn-outline-secondary(href=`/buildings/${building.id}/edit`) Edit
 
   div
     p= moment(building.created_at).format('lll')
@@ -25,4 +26,4 @@ block content
           td= m.name
           td= moment(m.created_at).format('lll')
           td
-            a.btn.btn-outline-primary(href=`/maps/${m.id}`) View
+            a.btn.btn-sm.btn-outline-primary(href=`/maps/${m.id}`) View

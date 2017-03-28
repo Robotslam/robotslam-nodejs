@@ -1,0 +1,11 @@
+extends ../layout
+
+block content
+  h1 Edit - #{title}
+
+  form(method='post', action=`/buildings/${building.id}`)
+    .form-group
+      label Name
+      input.form-control(type='text', name='name' value=building.name)
+
+    input.btn.btn-primary(type='submit', value='Save')
