@@ -1,5 +1,6 @@
 const express = require('express');
 const yaml = require('js-yaml');
+const ros = require('../modules/ros');
 const models = require('../models/index');
 
 const router = express.Router();
@@ -32,6 +33,7 @@ router.get('/:map_id', async function (req, res) {
   res.render('maps/view', {
     title: 'Map',
     map: map,
+    active: ros.active,
   });
 });
 
@@ -93,6 +95,16 @@ router.get('/:map/yaml', async function (req, res) {
 
   res.set('Content-Type', 'text/plain');
   res.send(yaml.safeDump(output));
+});
+
+router.get('/:map/toggle', async(req, res) => {
+  if (ros.active) {
+    ros.stop();
+  } else {
+    ros.measurement(req.map);
+  }
+
+  res.redirect(`/maps/${req.map.id}`);
 });
 
 function round(number) {

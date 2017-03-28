@@ -40,7 +40,7 @@ router.get('/:id', async function (req, res) {
         }]
       }
     ],
-    order: [[ models.measurementPoint, 'time', 'asc' ]],
+    order: [[models.measurementPoint, 'time', 'asc']],
   });
 
   const map = measurement.map;
@@ -103,7 +103,7 @@ router.get('/:id/export', async function (req, res) {
         }]
       }
     ],
-    order: [[ models.measurementPoint, 'time', 'asc' ]],
+    order: [[models.measurementPoint, 'time', 'asc']],
   });
 
   const points = measurement.measurementPoints;

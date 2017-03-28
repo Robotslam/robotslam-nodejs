@@ -42,3 +42,5 @@ block content
             .btn-group
               a.btn.btn-sm.btn-outline-primary(href=`/measurements/${m.id}`) View
               a.btn.btn-sm.btn-outline-primary(href=`/measurements/${m.id}/export`) Export
+
+  a.btn.btn-primary(href=`/maps/${map.id}/toggle`)= active ? 'Stop measurement' : 'Start measurement'
