@@ -1,7 +1,10 @@
 extends ../layout
 
 block content
-  h1= `Viewing ${title}`
+  h1= title
+
+  div
+    p= moment(building.created_at).format('lll')
 
   h2 Maps
   table.table

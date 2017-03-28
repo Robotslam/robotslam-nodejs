@@ -8,6 +8,8 @@ const fileUpload = require('express-fileupload');
 const routes = require('./routes');
 
 const app = express();
+app.locals.moment = require('moment');
+app.locals.moment.locale('sv');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
