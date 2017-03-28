@@ -6,9 +6,13 @@ block content
   div
     p= moment(building.created_at).format('lll')
 
-  h2 Maps
+  h2
+    | Maps
+    a.btn.btn-primary.float-right(href=`/buildings/${building.id}/explore`)
+      | #{active ? 'Stop exploration' : 'Start new exploration'}
+
   table.table
-    thead
+    thead.thead-default
       tr
         th #
         th Name
@@ -19,8 +23,6 @@ block content
         tr
           td= m.id
           td= m.name
-          td= m.created_at
+          td= moment(m.created_at).format('lll')
           td
             a.btn.btn-outline-primary(href=`/maps/${m.id}`) View
-
-  a.btn.btn-primary(href=`/buildings/${building.id}/explore`)= active ? 'Stop exploration' : 'Start new exploration'

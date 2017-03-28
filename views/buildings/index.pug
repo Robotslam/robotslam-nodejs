@@ -1,22 +1,22 @@
 extends ../layout
 
 block content
-  h1= title
+  h1
+    | #{title}
+    a.btn.btn-primary.float-right(href='/buildings/create') New building
 
   table.table
-    thead
+    thead.thead-default
       tr
         th #
         th Name
         th Created At
-        th
+        th.actions
     tbody
       each b in buildings
         tr
           td= b.id
           td= b.name
-          td= b.created_at
+          td= moment(b.created_at).format('ll')
           td
             a.btn.btn-outline-primary(href=`/buildings/${b.id}`) View
-
-  a.btn.btn-primary(href='/buildings/create') New building

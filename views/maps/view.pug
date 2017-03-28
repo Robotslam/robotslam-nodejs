@@ -26,9 +26,11 @@ block content
           a.btn.btn-outline-success(href=`/maps/${map.id}/yaml`) Download Yaml file
 
   h2 Measurements
+    a.btn.btn-primary.float-right(href=`/maps/${map.id}/toggle`)
+      | #{active ? 'Stop measurement' : 'Start measurement'}
 
   table.table
-    thead
+    thead.thead-default
       tr
         th #
         th Collected At
@@ -43,4 +45,3 @@ block content
               a.btn.btn-sm.btn-outline-primary(href=`/measurements/${m.id}`) View
               a.btn.btn-sm.btn-outline-primary(href=`/measurements/${m.id}/export`) Export
 
-  a.btn.btn-primary(href=`/maps/${map.id}/toggle`)= active ? 'Stop measurement' : 'Start measurement'
