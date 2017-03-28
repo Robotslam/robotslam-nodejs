@@ -43,45 +43,24 @@ router.get('/:id', async function (req, res) {
     order: [[models.measurementPoint, 'time', 'asc']],
   });
 
-  const map = measurement.map;
+  try {
+    const description = formatReferencePoints(measurement.map);
+    const transformer = new Transformer(description);
+    const coords = [];
 
-  const description = {
-    origin: [map.origin_x, map.origin_y, map.origin_yaw],
-    gps_references: [
-      {
-        x: 0,
-        y: map.height * map.resolution,
-        lat: map.ref_topleft.coordinates[0],
-        lng: map.ref_topleft.coordinates[1],
-      },
-      {
-        x: map.width * map.resolution,
-        y: map.height * map.resolution,
-        lat: map.ref_topright.coordinates[0],
-        lng: map.ref_topright.coordinates[1],
-      },
-      {
-        x: 0,
-        y: 0,
-        lat: map.ref_bottomleft.coordinates[0],
-        lng: map.ref_bottomleft.coordinates[1],
-      }
-    ]
-  };
+    measurement.measurementPoints.forEach((point) => {
+      transformedPoint = transformer.transformPoint(point.x, point.y);
+      coords.push([transformedPoint.x, transformedPoint.y]);
+    });
 
-  const transformer = new Transformer(description);
-  const coords = [];
-
-  measurement.measurementPoints.forEach((point) => {
-    transformedPoint = transformer.transformPoint(point.x, point.y);
-    coords.push([transformedPoint.x, transformedPoint.y]);
-  });
-
-  res.render('measurements/view', {
-    title: 'Measurements',
-    measurement: measurement,
-    coords: JSON.stringify(coords)
-  });
+    res.render('measurements/view', {
+      title: 'Measurements',
+      measurement: measurement,
+      coords: JSON.stringify(coords)
+    });
+  } catch (error) {
+    return res.status(500).send('Unable to transform data');
+  }
 });
 
 router.get('/:id/export', async function (req, res) {
@@ -90,10 +69,6 @@ router.get('/:id/export', async function (req, res) {
     where: {
       id: req.params.id,
     },
-    // attributes: [
-    //   '*',
-    //   [models.sequelize.fn('extract', models.sequelize.query('epoch from time')), 'stamp']
-    // ],
     include: [
       models.map,
       {
@@ -106,10 +81,24 @@ router.get('/:id/export', async function (req, res) {
     order: [[models.measurementPoint, 'time', 'asc']],
   });
 
-  const points = measurement.measurementPoints;
-  const map = measurement.map;
+  try {
+    const points = measurement.measurementPoints;
+    const description = formatReferencePoints(measurement.map);
 
-  const description = {
+    const transformer = new Transformer(description);
+    const output = await exportCsv(points, transformer);
+
+    //res.setHeader('Content-Disposition', 'attachment; filename=' + newFilename);
+    res.setHeader('Content-Disposition', `inline; filename=measurement_${req.params.id}.csv`);
+    res.setHeader('Content-Type', 'text/plain');
+    res.send(output);
+  } catch (error) {
+    res.status(500).send('Unable to transform data');
+  }
+});
+
+function formatReferencePoints(map) {
+  return {
     origin: [map.origin_x, map.origin_y, map.origin_yaw],
     gps_references: [
       {
@@ -132,35 +121,6 @@ router.get('/:id/export', async function (req, res) {
       }
     ]
   };
-
-  const transformer = new Transformer(description);
-  const output = await exportCsv(points, transformer);
-
-  //res.setHeader('Content-Disposition', 'attachment; filename=' + newFilename);
-  res.setHeader('Content-Disposition', `inline; filename=measurement_${req.params.id}.csv`);
-  res.setHeader('Content-Type', 'text/plain');
-  res.send(output);
-});
-
-router.post('/:id/export/visualize', async(req, res) => {
-
-  const points = await models.measurementPoint.findAll({
-    include: [models.measurementPointWifi]
-  });
-
-  const description = yaml.load(req.files.map_description.data);
-  const transformer = new Transformer(description);
-  const coords = [];
-
-  points.forEach((point) => {
-    transformedPoint = transformer.transformPoint(point.x, point.y);
-    coords.push([transformedPoint.x, transformedPoint.y]);
-  });
-
-  res.render('export_visualize', {
-    title: 'Export',
-    coords: JSON.stringify(coords)
-  });
-});
+}
 
 module.exports = router;
