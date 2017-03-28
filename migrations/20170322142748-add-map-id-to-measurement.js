@@ -5,7 +5,7 @@ module.exports = {
     return queryInterface.addColumn('measurement', 'map_id', {
       type: Sequelize.INTEGER,
       references: {
-        model: 'measurement'
+        model: 'map'
       },
       onUpdate: 'cascade',
       onDelete: 'cascade'
