@@ -39,7 +39,7 @@ block content
       each m in map.measurements
         tr
           td= m.id
-          td= m.created_at
+          td= moment(m.created_at).format('lll')
           td
             .btn-group
               a.btn.btn-sm.btn-outline-primary(href=`/measurements/${m.id}`) View
