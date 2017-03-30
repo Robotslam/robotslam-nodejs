@@ -28,6 +28,8 @@ class WiFiScanner {
         .catch((err) => console.error(err));
     };
     this._topic.subscribe(this._callback);
+
+    return measurement;
   }
 
   stop() {

@@ -2,6 +2,7 @@ const URL = require('url-parse');
 const roslib = require('roslib');
 const WiFiScanner = require('./wifi');
 const MapSaver = require('./map');
+const TrajectorySaver = require('./trajectory');
 
 class RosManager {
 
@@ -27,6 +28,7 @@ class RosManager {
     this.active = false;
     this.mode = 0;
     this.map = null;
+    this.measurementInstance = null;
 
     this.wifiScanner = new WiFiScanner(this.ros);
   }
@@ -34,7 +36,7 @@ class RosManager {
   /*
     Start a new exploration for the building.
   */
-  explore(map) {
+  async explore(map) {
     if (!this.connected) {
       throw 'Not connected to server';
     }
@@ -46,13 +48,13 @@ class RosManager {
     this.active = true;
     this.mode = 0;
     this.map = map;
-    this.wifiScanner.start(map);
+    this.measurementInstance = await this.wifiScanner.start(map);
   }
 
   /*
     Start a new measurement for the map
    */
-  measurement(map) {
+  async measurement(map) {
     if (!this.connected) {
       throw 'Not connected to server';
     }
@@ -64,18 +66,22 @@ class RosManager {
     this.active = true;
     this.mode = 1;
     this.map = map;
-    this.wifiScanner.start(map);
+    this.measurementInstance = await this.wifiScanner.start(map);
   }
 
   stop() {
     this.active = false;
 
+    this.wifiScanner.stop();
     if (this.mode === 0) {
       const mapSaver = new MapSaver(this.ros);
       mapSaver.save(this.map);
-    }
 
-    this.wifiScanner.stop();
+      // Wait 2s in oder to let the wifi scanner save all data
+      setTimeout(() => {
+        new TrajectorySaver(this.ros, this.measurementInstance).save();
+      }, 2000);
+    }
   }
 
 }
