@@ -10,6 +10,7 @@ const routes = require('./routes');
 const app = express();
 app.locals.moment = require('moment');
 app.locals.moment.locale('sv');
+app.locals.ros = require('./modules/ros');
 
 if (app.get('env') !== 'production') {
   app.locals.pretty = true;

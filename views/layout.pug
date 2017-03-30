@@ -18,6 +18,17 @@ html
               a.nav-link(href="/") Home
             li.nav-item(class=title == 'Buildings' ? 'active' : '')
               a.nav-link(href="/buildings") Buildings
+          ul.navbar-nav.pull-right
+            li.nav-item
+              if ros.active
+                if ros.mode === 0
+                  a.btn.btn-warning Exploring
+                else
+                  a.btn.btn-warning Measurement
+              else if ros.connected
+                a.btn.btn-success.disabled() Connected
+              else
+                a.btn.btn-danger Disconnected
 
     div.container#main
       block content
