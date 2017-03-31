@@ -4,3 +4,4 @@ import './style.scss';
 
 import './map';
 import './map_visualize';
+import './export.js';

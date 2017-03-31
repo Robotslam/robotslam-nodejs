@@ -1,0 +1,25 @@
+.export-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .modal-dialog {
+    max-width: initial;
+    .progress {
+      height: 3rem;
+      .progress-bar {
+        height: initial;
+        width: 0%;
+        line-height: 3rem;
+        font-size: 1rem;
+        font-weight: bold;
+      }
+    }
+  }
+}

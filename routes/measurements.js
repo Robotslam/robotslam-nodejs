@@ -63,8 +63,46 @@ router.get('/:id', async function (req, res) {
   }
 });
 
+router.get('/:id/export_do', async function (req, res) {
+  res.status(200);
+  res.set('Content-Type', 'text/event-stream;charset=utf-8');
+  res.set('Cache-Control', 'no-cache');
+  //res.set('Transfer-Encoding', 'identity');
+
+  const measurement = await models.measurement.find({
+    where: {
+      id: req.params.id,
+    },
+    include: [
+      models.map,
+      {
+        model: models.measurementPoint,
+        include: [{
+          model: models.measurementPointWifi
+        }]
+      }
+    ],
+    order: [[models.measurementPoint, 'time', 'asc']],
+  });
+
+  measurement.measurementPoints.forEach((point) => {
+    //transformedPoint = transformer.transformPoint(point.x, point.y);
+    //coords.push([transformedPoint.x, transformedPoint.y]);
+  });
+});
+
 router.get('/:id/export', async function (req, res) {
-  // duplicate code, maybe fix this when we add Oscars improved gps_references ref_topleft stuff.
+  //Consider binding this automatically?
+  const measurement = await models.measurement.find({ where: { id: req.params.id } });
+  const points = await models.measurementPoint.count({ where: { measurement_id: req.params.id } });
+  res.render('measurements/export', {
+    title: 'Measurements',
+    measurement: measurement,
+    points: points
+  });
+});
+
+router.get('/:id/export_old', async function (req, res) {
   const measurement = await models.measurement.find({
     where: {
       id: req.params.id,

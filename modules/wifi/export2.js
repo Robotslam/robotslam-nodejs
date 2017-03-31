@@ -8,14 +8,22 @@ const SALT = config.get('export.salt');
 /**
  * Accepts the WiFi scan message, and formats it into correct csv format
  */
-function exportCsv(points, transformer) {
+function exportCsvString(points, transformer) {
+  return buildCsv(points, transformer).then(() => {
+    //return csv_string(out);
+    return JSON.stringify(out, null, 4);
+  });
+}
 
+function exportCsvArray(points, transformer) {
+
+}
+
+function buildCsv(points, transformer) {
   const out = [];
 
   let p = Promise.resolve();
-
   let i = 1;
-
   // Iterate over each measurement time
   points.forEach((point) => {
     // Ensure we actually have some data to export
@@ -25,21 +33,14 @@ function exportCsv(points, transformer) {
     }
 
     p = p.then(() => {
+      let outLocal = [];
       const formattedMsg = formatPoint(point, transformer);
       return hash(formattedMsg, i++).then((h) => {
-        out.push(...formattedMsg);
-        out.push(h);
-        out.push(['-- New Line --']);
+        outLocal.push(...formattedMsg);
+        outLocal.push(h);
+        //outLocal.push(['-- New Line --']);
       });
     });
-  });
-
-  p = p.then(() => {
-    return csv_string(out);
-  });
-
-  p = p.catch((err) => {
-    console.error("REJECTED", err);
   });
 
   return p;
