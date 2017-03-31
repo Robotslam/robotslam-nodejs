@@ -22,13 +22,13 @@ html
             li.nav-item
               if ros.active
                 if ros.mode === 0
-                  a.btn.btn-warning Exploring
+                  button.btn.btn-warning Exploring
                 else
-                  a.btn.btn-warning Measurement
+                  button.btn.btn-warning Measurement
               else if ros.connected
-                a.btn.btn-success.disabled() Connected
+                button.btn.btn-success Connected
               else
-                a.btn.btn-danger Disconnected
+                button.btn.btn-danger Disconnected
 
     div.container#main
       block content

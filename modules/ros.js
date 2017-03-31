@@ -12,17 +12,28 @@ class RosManager {
       url: 'ws://' + ros_uri.hostname + ':9090'
     });
 
+    this.connected = false;
+    this.reconnectInterval = 5000;
+
     this.ros.on('connection', () => {
       console.log('Connected to websocket server.');
       this.connected = true;
     });
 
-    this.ros.on('error', function (error) {
-      console.log('Error connecting to websocket server: ', error);
+    this.ros.on('error', (error) => {
+      console.warn('Error connecting to websocket server:', error.message);
+      this.connected = false;
+      setTimeout(() => {
+        this.ros.connect('ws://' + ros_uri.hostname + ':9090');
+      }, this.reconnectInterval);
     });
 
-    this.ros.on('close', function () {
+    this.ros.on('close', () => {
       console.log('Connection to websocket server closed.');
+      this.connected = false;
+      setTimeout(() => {
+        this.ros.connect('ws://' + ros_uri.hostname + ':9090');
+      }, this.reconnectInterval);
     });
 
     this.active = false;
