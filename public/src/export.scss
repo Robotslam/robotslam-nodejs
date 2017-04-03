@@ -21,5 +21,30 @@
         font-weight: bold;
       }
     }
+
+    .modal-footer {
+      span#status {
+        margin-right: auto;
+      }
+    }
+  }
+
+  &.session-starting, &.session-started, &.session-closing {
+    .modal-dialog .progress .progress-bar {
+      @extend .progress-bar-striped;
+      @extend .progress-bar-animated;
+    }
+  }
+
+  &.session-closed {
+    .modal-dialog .progress .progress-bar {
+      @extend .bg-success;
+    }
+  }
+
+  &.session-error {
+    .modal-dialog .progress .progress-bar {
+      @extend .bg-danger;
+    }
   }
 }

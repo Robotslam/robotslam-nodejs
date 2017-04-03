@@ -9,6 +9,7 @@ block content
             h5= `Exporting measurement #${measurement.id}`
           .modal-body
             .progress
-              .progress-bar.progress-bar-striped.progress-bar-animated(data-max=points)
+              .progress-bar(data-max=points)
           .modal-footer
+            span#status Ready
             button.btn.btn-primary(type="button") Start
