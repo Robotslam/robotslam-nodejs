@@ -7,7 +7,7 @@ const ros = require('../modules/ros');
 const CPS = require('../modules/cps');
 const config = require('config');
 
-const cps = new CPS(config.get('export.subscriberNumber'), 2139, 1);
+const cps = new CPS(config.get('cpsExport.subscribernumber'), 2139, 1);
 
 const router = express.Router();
 

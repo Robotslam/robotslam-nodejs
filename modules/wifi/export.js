@@ -2,8 +2,8 @@ const crypto = require('crypto');
 const config = require('config');
 const csv_string = require('./csv_string');
 
-const KEY = config.get('export.key');
-const SALT = config.get('export.salt');
+const KEY = config.get('cpsExport.key');
+const SALT = config.get('cpsExport.salt');
 
 /**
  * Accepts the WiFi scan message, and formats it into correct csv format

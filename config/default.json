@@ -2,9 +2,9 @@
   "image": {
     "transparent": "#CDCDCD"
   },
-  "export": {
+  "cpsExport": {
     "key": "x7nfvn37vbqapzx627d",
     "salt": "98012r434",
-    "subscriberNumber": "robotslamimei"
+    "subscribernumber": "robotslamimei"
   }
 }
