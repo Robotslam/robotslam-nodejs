@@ -2,11 +2,12 @@ const https = require('https');
 const querystring = require('querystring');
 
 class CPS {
-  constructor(subscriberNumber, buildingId, floor) {
+  constructor(subscribernumber, buildingId, floor) {
     this.buildingId = buildingId;
     this.floor = floor;
     this.agent = new https.Agent({ keepAlive: true, maxSockets: 10 });
-    this.subscriberNumber = subscriberNumber;
+    this.subscribernumber = subscribernumber;
+    this.activeSession = false;
 
     // ?cmd=startLearning&isIndoor=1&buildingId=167&floor=1&subscribernumber=robotslamimei&timestamp=1490950899
     this.options = {
@@ -17,6 +18,9 @@ class CPS {
   }
 
   async startSession() {
+    if (this.activeSession)
+      throw new Error('There is already a session running, please stop it before attempting to start a new.');
+
     try {
       const res = await this._get('startLearning');
       console.log('Successfully started SLAM session.');
@@ -26,6 +30,9 @@ class CPS {
   }
 
   async stopSession() {
+    if (this.activeSession)
+      throw new Error('There is no session running, please start one before attempting to stop it.');
+
     try {
       const res = await this._get('stopLearning');
       console.log('Successfully stopped SLAM session.');
@@ -55,7 +62,6 @@ class CPS {
           timestamp: Math.floor(new Date() / 1000)
         }
       });
-      console.log(options);
       const req = https.request(options, (res) => {
         if (res.statusCode !== 200) {
           const error = new Error(`SLAM session stop failed. HTTP status code: ${res.statusCode}`);
