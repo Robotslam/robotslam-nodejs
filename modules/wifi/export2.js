@@ -9,41 +9,50 @@ const SALT = config.get('export.salt');
  * Accepts the WiFi scan message, and formats it into correct csv format
  */
 function exportCsvString(points, transformer) {
-  return buildCsv(points, transformer).then(() => {
-    //return csv_string(out);
-    return JSON.stringify(out, null, 4);
+  let p = buildCsv(points, transformer);
+
+  p = p.then((data) => {
+    data = data.map((row) => [...row, ['-- New Line --']]);
+    let flat = [].concat.apply([], data);
+    return csv_string(flat);
   });
+
+  return p;
 }
 
 function exportCsvArray(points, transformer) {
+  let p = buildCsv(points, transformer);
 
+  p = p.then((data) => {
+    let out = data.map((row) => csv_string(row));
+    return Promise.all(out);
+  });
+
+  return p;
 }
 
 function buildCsv(points, transformer) {
   const out = [];
 
-  let p = Promise.resolve();
-  let i = 1;
-  // Iterate over each measurement time
-  points.forEach((point) => {
-    // Ensure we actually have some data to export
-    if (point.measurementPointWifis.length <= 0) {
-      console.error(`Warning: Position #${i} does not contain any scans.`);
-      //return;
-    }
+  // range(1...points.length as i).map(i) return Promise
+  const promises = [...Array(points.length).keys()].map((i) => {
+    return new Promise((resolve, reject) => {
+      let point = points[i];
+      if (point.measurementPointWifis.length <= 0) {
+        console.error(`Warning: Position #${i} does not contain any scans.`);
+        //return;
+      }
 
-    p = p.then(() => {
       let outLocal = [];
       const formattedMsg = formatPoint(point, transformer);
       return hash(formattedMsg, i++).then((h) => {
-        outLocal.push(...formattedMsg);
-        outLocal.push(h);
+        resolve([...formattedMsg, h]);
         //outLocal.push(['-- New Line --']);
       });
     });
   });
 
-  return p;
+  return Promise.all(promises);
 }
 
 function hash(msg, i) {
@@ -118,4 +127,4 @@ function formatHeader(point, transformer) {
   ];
 }
 
-module.exports = exportCsv;
+module.exports = { exportCsvString, exportCsvArray };

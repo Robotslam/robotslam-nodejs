@@ -4,6 +4,10 @@ const models = require('../models');
 const Transformer = require('../modules/transformer');
 const exportCsv = require('../modules/wifi/export2');
 const ros = require('../modules/ros');
+const CPS = require('../modules/cps');
+const config = require('config');
+
+const cps = new CPS(config.get('export.subscriberNumber'), 2139, 1);
 
 const router = express.Router();
 
@@ -85,10 +89,24 @@ router.get('/:id/export_do', async function (req, res) {
     order: [[models.measurementPoint, 'time', 'asc']],
   });
 
-  measurement.measurementPoints.forEach((point) => {
-    //transformedPoint = transformer.transformPoint(point.x, point.y);
-    //coords.push([transformedPoint.x, transformedPoint.y]);
-  });
+  try {
+    const points = measurement.measurementPoints;
+    const description = formatReferencePoints(measurement.map);
+
+    const transformer = new Transformer(description);
+    const output = await exportCsv.exportCsvArray(points, transformer);
+
+    await cps.startSession();
+    let i = 1;
+    await Promise.all(output.map(async (data) => {
+      await cps.sendPoint(data);
+      res.write(`data: ${i++}\n\n`);
+    }));
+    await cps.stopSession();
+
+  } catch (error) {
+    res.send('Unable to transform data: ' + error);
+  }
 });
 
 router.get('/:id/export', async function (req, res) {
@@ -124,14 +142,13 @@ router.get('/:id/export_old', async function (req, res) {
     const description = formatReferencePoints(measurement.map);
 
     const transformer = new Transformer(description);
-    const output = await exportCsv(points, transformer);
-
+    const output = await exportCsv.exportCsvString(points, transformer);
     //res.setHeader('Content-Disposition', 'attachment; filename=' + newFilename);
     res.setHeader('Content-Disposition', `inline; filename=measurement_${req.params.id}.csv`);
     res.setHeader('Content-Type', 'text/plain');
     res.send(output);
   } catch (error) {
-    res.status(500).send('Unable to transform data');
+    res.status(500).send('Unable to transform data: ' + error);
   }
 });
 

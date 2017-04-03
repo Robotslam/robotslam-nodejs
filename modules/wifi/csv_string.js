@@ -17,8 +17,6 @@ function csv_string(data) {
           return reject(err);
         }
 
-        console.log(data);
-
         return fullfill(data);
       }
     );
