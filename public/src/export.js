@@ -21,6 +21,7 @@ if (exportContainer !== null) {
     }
 
     eventSource.onopen = function(e) {
+      button.addAttribute('disabled', 'disabled');
       button.innerHTML = 'Exporting...';
     }
 
