@@ -97,18 +97,18 @@ router.get('/:id/export_do', async function (req, res) {
     const output = await exportCsv.exportCsvArray(points, transformer);
 
     // session_starting -> sessions_started -> *progress* -> session_closing -> session_closed
-    res.write(`event: session_starting\n\n`);
+    res.write(`event: session_starting\ndata:\n\n`);
     await cps.startSession();
     let i = 1;
-    res.write(`event: session_started\n\n`);
+    res.write(`event: session_started\ndata:\n\n`);
     await Promise.all(output.map(async (data) => {
       await cps.sendPoint(data);
       res.write(`event: progress\n`);
       res.write(`data: ${i++}\n\n`);
     }));
-    res.write(`event: session_closing\n`);
+    res.write(`event: session_closing\ndata:\n\n`);
     await cps.stopSession();
-    res.write(`event: session_closed\n`);
+    res.write(`event: session_closed\ndata:\n\n`);
 
   } catch (error) {
     res.send('Unable to transform data: ' + error);
