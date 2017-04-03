@@ -31,15 +31,10 @@ router.get('/', async function (req, res) {
   });
 });
 
-router.get('/create', function (req, res) {
-  res.render('buildings/create', {
-    title: 'Buildings'
-  });
-});
-
 router.post('/', async function (req, res) {
   const building = await models.building.create({
-    name: req.body.name
+    name: req.body.name,
+    cps_id: req.body.cps_id
   });
 
   res.redirect(`/buildings/${building.id}`);
@@ -61,12 +56,6 @@ router.get('/:id', async function (req, res) {
   });
 });
 
-router.get('/:building/edit', function (req, res) {
-  res.render('buildings/edit', {
-    title: req.building.name,
-    building: req.building.get()
-  });
-});
 router.post('/:building', async function (req, res) {
   req.building.update(req.body);
   res.redirect(`/buildings/${req.building.id}`);

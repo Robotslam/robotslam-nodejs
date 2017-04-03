@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "body-parser": "^1.17.1",
+    "bootstrap.native": "^2.0.8",
     "config": "^1.25.1",
     "cookie-parser": "~1.4.3",
     "express": "^4.15.2",

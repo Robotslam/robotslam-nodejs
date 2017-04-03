@@ -2,9 +2,10 @@ extends ../layout
 
 block content
   h1= title
-    a.btn.btn-sm.btn-outline-secondary(href=`/buildings/${building.id}/edit`) Edit
+    button.btn.btn-sm.btn-outline-secondary(data-toggle='modal' data-target='#editModal') Edit
 
-  div
+  div.info
+    p= `CPS ID: ${building.cps_id}`
     p= moment(building.created_at).format('lll')
 
   h2
@@ -27,3 +28,22 @@ block content
           td= moment(m.created_at).format('lll')
           td
             a.btn.btn-sm.btn-outline-primary(href=`/maps/${m.id}`) View
+
+  #editModal.modal.fade
+    form(method='post')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Update building
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden="true") &times;
+          .modal-body
+            .form-group
+              label Name
+              input.form-control(type='text', name='name', value=building.name)
+            .form-group
+              label CPS ID
+              input.form-control(type='text', name='cps_id' value=building.cps_id)
+          .modal-footer
+            input.btn.btn-primary(type='submit', value='Save')
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Close

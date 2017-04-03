@@ -3,7 +3,7 @@ extends ../layout
 block content
   h1
     | #{title}
-    a.btn.btn-primary.float-right(href='/buildings/create') New building
+    button.btn.btn-primary.float-right(data-toggle='modal' data-target='#createModal') New building
 
   table.table
     thead.thead-default
@@ -20,3 +20,22 @@ block content
           td= moment(b.created_at).format('ll')
           td
             a.btn.btn-sm.btn-outline-primary(href=`/buildings/${b.id}`) View
+
+  #createModal.modal.fade
+    form(method='post')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Create new Building
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden="true") &times;
+          .modal-body
+            .form-group
+              label Name
+              input.form-control(type='text', name='name')
+            .form-group
+              label CPS ID
+              input.form-control(type='text', name='cps_id')
+          .modal-footer
+            input.btn.btn-primary(type='submit', value='Create')
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Close
