@@ -5,7 +5,7 @@ class CPS {
   constructor(subscriberNumber, buildingId, floor) {
     this.buildingId = buildingId;
     this.floor = floor;
-    this.agent = new https.Agent({ keepAlive: true });
+    this.agent = new https.Agent({ keepAlive: true, maxSockets: 10 });
     this.subscriberNumber = subscriberNumber;
 
     // ?cmd=startLearning&isIndoor=1&buildingId=167&floor=1&subscribernumber=robotslamimei&timestamp=1490950899
