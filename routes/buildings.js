@@ -61,12 +61,23 @@ router.post('/:building', async function (req, res) {
   res.redirect(`/buildings/${req.building.id}`);
 });
 
+router.post('/:building/explore', async function (req, res) {
+  if (ros.active) {
+    throw new Error('404');
+  }
+
+  const map = await req.building.createMap({
+    name: req.body.name,
+    floor: req.body.floor
+  });
+  ros.explore(map);
+
+  res.redirect(`/buildings/${req.building.id}`);
+});
+
 router.get('/:building/explore', async function (req, res) {
   if (ros.active) {
     ros.stop();
-  } else {
-    const map = await req.building.createMap({});
-    ros.explore(map);
   }
 
   res.redirect(`/buildings/${req.building.id}`);
