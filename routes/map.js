@@ -37,13 +37,6 @@ router.get('/:map_id', async function (req, res) {
   });
 });
 
-router.get('/:map/edit', function (req, res) {
-  res.render('maps/edit', {
-    title: 'Edit - ' + req.map.name,
-    map: req.map,
-  });
-});
-
 router.get('/:map/update', function (req, res) {
   res.render('maps/fit_on_map', {
     title: 'Fit on map',
@@ -73,7 +66,8 @@ router.post('/:map', async function (req, res) {
     });
   } else {
     req.map.update({
-      name: req.body.name
+      name: req.body.name,
+      floor: req.body.floor
     });
   }
 

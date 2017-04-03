@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   h1= map.name
-    a.btn.btn-sm.btn-outline-secondary(href=`/maps/${map.id}/edit`) Edit
+    button.btn.btn-sm.btn-outline-secondary(data-toggle='modal' data-target='#editModal') Edit
 
   .row
     .col.col-6
@@ -44,3 +44,22 @@ block content
             .btn-group
               a.btn.btn-sm.btn-outline-primary(href=`/measurements/${m.id}`) View
               a.btn.btn-sm.btn-outline-primary(href=`/measurements/${m.id}/export`) Export
+
+  #editModal.modal.fade
+    form(method='post')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Update map
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden="true") &times;
+          .modal-body
+            .form-group
+              label Name
+              input.form-control(type='text', name='name', value=map.name)
+            .form-group
+              label Floor
+              input.form-control(type='text', name='floor' value=map.floor)
+          .modal-footer
+            input.btn.btn-primary(type='submit', value='Save')
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Close

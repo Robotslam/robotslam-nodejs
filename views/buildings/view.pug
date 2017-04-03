@@ -18,6 +18,7 @@ block content
       tr
         th #
         th Name
+        th Floor
         th Created At
         th
     tbody
@@ -25,6 +26,7 @@ block content
         tr
           td= m.id
           td= m.name
+          td= m.floor
           td= moment(m.created_at).format('lll')
           td
             a.btn.btn-sm.btn-outline-primary(href=`/maps/${m.id}`) View
@@ -36,7 +38,7 @@ block content
           .modal-header
             h5.modal-title Update building
             button.close(type='button', data-dismiss='modal', aria-label='Close')
-            span(aria-hidden="true") &times;
+              span(aria-hidden="true") &times;
           .modal-body
             .form-group
               label Name

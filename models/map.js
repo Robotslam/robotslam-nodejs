@@ -2,6 +2,7 @@
 module.exports = function (sequelize, DataTypes) {
   const Map = sequelize.define('map', {
     name: DataTypes.STRING,
+    floor: DataTypes.INTEGER,
     resolution: DataTypes.FLOAT,
     width: DataTypes.INTEGER,
     height: DataTypes.INTEGER,
