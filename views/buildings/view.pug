@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   h1= title
-    button.btn.btn-sm.btn-outline-secondary(data-toggle='modal' data-target='#editModal') Edit
+    a.btn.btn-sm.btn-outline-secondary(href='#', data-toggle='modal', data-target='#editModal') Edit
 
   div.info
     p= `CPS ID: ${building.cps_id}`
@@ -13,7 +13,7 @@ block content
     if active
       a.btn.btn-primary.float-right(href=`/buildings/${building.id}/explore`) Stop exploration
     else
-      button.btn.btn-primary.float-right(data-toggle='modal' data-target='#exploreModal') Start new exploration
+      a.btn.btn-primary.float-right(href='#', data-toggle='modal', data-target='#exploreModal') Start new exploration
 
   table.table
     thead.thead-default
@@ -70,4 +70,3 @@ block content
           .modal-footer
             input.btn.btn-primary(type='submit', value='Start')
             button.btn.btn-secondary(type="button", data-dismiss="modal") Close
-
