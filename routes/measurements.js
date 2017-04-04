@@ -98,7 +98,7 @@ router.get('/:id/export_do', async function (req, res) {
 
     // session_starting -> sessions_started -> *progress* -> session_closing -> session_closed
     res.write(`event: session_starting\ndata:\n\n`);
-    await cps.startSession();
+    await cps.startSession(points[0].unixtime);
     let i = 1;
     res.write(`event: session_started\ndata:\n\n`);
     await Promise.all(output.map(async (data) => {
@@ -107,7 +107,7 @@ router.get('/:id/export_do', async function (req, res) {
       res.write(`data: ${i++}\n\n`);
     }));
     res.write(`event: session_closing\ndata:\n\n`);
-    await cps.stopSession();
+    await cps.stopSession(points[points.length-1].unixtime);
     res.write(`event: session_closed\ndata:\n\n`);
 
   } catch (error) {

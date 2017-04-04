@@ -17,6 +17,11 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'measurement_point',
     underscored: true,
     underscoredAll: true,
+    getterMethods: {
+      unixtime: function () {
+        return Math.round(this.time.getTime() / 1000);
+      }
+    },
     classMethods: {
       associate: function(models) {
         measurementPoint.belongsTo(models.measurement);
