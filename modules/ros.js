@@ -3,6 +3,7 @@ const roslib = require('roslib');
 const WiFiScanner = require('./wifi');
 const MapSaver = require('./map');
 const TrajectorySaver = require('./trajectory');
+const MoveBaseClient = require('./move_base_client');
 
 class RosManager {
 
@@ -18,6 +19,7 @@ class RosManager {
     this.ros.on('connection', () => {
       console.log('Connected to websocket server.');
       this.connected = true;
+      this.moveBaseClient = new MoveBaseClient(this.ros);
     });
 
     this.ros.on('error', (error) => {
@@ -60,6 +62,7 @@ class RosManager {
     this.mode = 0;
     this.map = map;
     this.measurementInstance = await this.wifiScanner.start(map);
+    this.moveBaseClient.moveTo(); // default, we don't care
   }
 
   /*
@@ -85,6 +88,7 @@ class RosManager {
 
     this.wifiScanner.stop();
     if (this.mode === 0) {
+      this.moveBaseClient.stop();
       const mapSaver = new MapSaver(this.ros);
       mapSaver.save(this.map);
 

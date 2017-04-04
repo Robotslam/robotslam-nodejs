@@ -17,24 +17,24 @@ class CPS {
     };
   }
 
-  async startSession() {
+  async startSession(timestamp) {
     if (this.activeSession)
       throw new Error('There is already a session running, please stop it before attempting to start a new.');
 
     try {
-      const res = await this._get('startLearning');
+      const res = await this._get('startLearning', timestamp);
       console.log('Successfully started SLAM session.');
     } catch (error) {
       throw error;
     }
   }
 
-  async stopSession() {
+  async stopSession(timestamp) {
     if (this.activeSession)
       throw new Error('There is no session running, please start one before attempting to stop it.');
 
     try {
-      const res = await this._get('stopLearning');
+      const res = await this._get('stopLearning', timestamp);
       console.log('Successfully stopped SLAM session.');
     } catch (error) {
       throw error;
@@ -50,7 +50,7 @@ class CPS {
     }
   }
 
-  async _get(cmd) {
+  async _get(cmd, timestamp) {
     const promise = new Promise((resolve, reject) => {
       const options = this._createOptions({
         data: {
@@ -58,8 +58,8 @@ class CPS {
           isIndoor: 1,
           buildingId: this.buildingId,
           floor: this.floor,
-          subscribernumber: this.subscriberNumber,
-          timestamp: Math.floor(new Date() / 1000)
+          subscribernumber: this.subscribernumber,
+          timestamp: timestamp
         }
       });
       const req = https.request(options, (res) => {
