@@ -12,8 +12,10 @@ block content
     | Maps
     if active
       a.btn.btn-primary.float-right(href=`/buildings/${building.id}/explore`) Stop exploration
-    else
+    else if ros.connected
       a.btn.btn-primary.float-right(href='#', data-toggle='modal', data-target='#exploreModal') Start new exploration
+    else
+      a.btn.btn-primary.disabled.float-right(href='#') Start new exploration
 
   table.table
     thead.thead-default
