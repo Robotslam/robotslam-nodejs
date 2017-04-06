@@ -98,7 +98,7 @@ router.get('/:id/export_do', async function (req, res) {
     const output = await exportCsv.exportCsvArray(points, transformer);
 
     // session_starting -> sessions_started -> *progress* -> session_closing -> session_closed
-    const cps = new CPS(config.get('cpsExport.subscribernumber'), map.cps_id, 1);
+    const cps = new CPS(config.get('cpsExport.subscribernumber'), measurement.map.building.cps_id, measurement.map.floor);
     res.write(`event: session_starting\ndata:\n\n`);
     await cps.startSession(points[0].unixtime);
     let i = 1;
