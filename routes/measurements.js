@@ -7,8 +7,6 @@ const ros = require('../modules/ros');
 const CPS = require('../modules/cps');
 const config = require('config');
 
-const cps = new CPS(config.get('cpsExport.subscribernumber'), 2139, 1);
-
 const router = express.Router();
 
 router.get('/', async function (req, res) {
@@ -78,7 +76,10 @@ router.get('/:id/export_do', async function (req, res) {
       id: req.params.id,
     },
     include: [
-      models.map,
+      {
+        model: models.map,
+        include: [models.building]
+      },
       {
         model: models.measurementPoint,
         include: [{
@@ -97,6 +98,7 @@ router.get('/:id/export_do', async function (req, res) {
     const output = await exportCsv.exportCsvArray(points, transformer);
 
     // session_starting -> sessions_started -> *progress* -> session_closing -> session_closed
+    const cps = new CPS(config.get('cpsExport.subscribernumber'), map.cps_id, 1);
     res.write(`event: session_starting\ndata:\n\n`);
     await cps.startSession(points[0].unixtime);
     let i = 1;
