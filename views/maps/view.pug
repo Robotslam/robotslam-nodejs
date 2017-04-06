@@ -26,8 +26,12 @@ block content
           a.btn.btn-outline-success(href=`/maps/${map.id}/yaml`) Download Yaml
 
   h2 Measurements
-    a.btn.btn-primary.float-right(href=`/maps/${map.id}/toggle`)
-      | #{active ? 'Stop measurement' : 'Start measurement'}
+    if active
+      a.btn.btn-primary.float-right(href=`/maps/${map.id}/toggle`) Stop measuring
+    else if ros.connected
+      a.btn.btn-primary.float-right(href=`/maps/${map.id}/toggle`) Start new measurement
+    else
+      a.btn.btn-primary.disabled.float-right(href='#') Start new measurement
 
   table.table
     thead.thead-default
