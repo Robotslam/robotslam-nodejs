@@ -141,8 +141,10 @@ WantedBy=multi-user.target
 ```
 
 ### Manual Deploy
+
 Upload the new version of the project to the server to the `APPLICATION FOLDER`.
 Then run the following commands in the `APPLICATION FOLDER`.
+
 ```bash
 # Install the npm dependencies
 $ npm install
