@@ -15,10 +15,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "postgres",
-    "password": "postgres",
+    "username": "robotslam",
+    "password": "6fFeU9kvmTVq6YLeBpaPZKhVbUej87WG2erE59sdBdE",
     "database": "robotslam",
-    "host": "127.0.0.1",
+    "host": "robotslam.c9oqoqblrl3u.eu-west-1.rds.amazonaws.com",
     "dialect": "postgres",
     "migrationStorageTableName": "sequelize_meta"
   }

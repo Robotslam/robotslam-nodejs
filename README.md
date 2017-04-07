@@ -4,7 +4,7 @@ This is the RobotSlam Server, written in Node.JS using ECMAScript 2017.
 
 ## Requirements
 * Node v7.6
-* Postgres v9.5
+* Postgres v9.5 (with PostGIS)
 
 ## Development
 
@@ -48,7 +48,7 @@ https://github.com/Nyr/openvpn-install.
 wget https://git.io/vpn -O openvpn-install.sh && bash openvpn-install.sh
 ```
 
-*Remember to ensure the port is open in Security Groups.*
+*Remember to check that the ports used by OpenVPN are open (Security Groups in EC2 settings).*
 
 ### Installing nginx as reverse proxy
 
@@ -120,7 +120,8 @@ nvm alias default 7.*
 
 ### Configuring Systemd (Node.js)
 
-Create the file `/lib/systemd/system/robotslam.service` with the following content:
+Create the file `/lib/systemd/system/robotslam.service` with the following content,
+making sure to replace "<APPLICATION_FOLDER>" with the application path.
 
 ```systemd
 [Unit]
@@ -131,10 +132,24 @@ After=network.target
 Environment=NODE_ENV=production
 Type=simple
 User=ubuntu
-WorkingDirectory=/home/ubuntu/app
-ExecStart=/home/ubuntu/app/start.sh
+WorkingDirectory=<APPLICATION FOLDER>
+ExecStart=<APPLICATION FOLDER>/start.sh
 Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
+```
+
+### Manual Deploy
+Upload the new version of the project to the server to the `APPLICATION FOLDER`.
+Then run the following commands in the `APPLICATION FOLDER`.
+```bash
+# Install the npm dependencies
+$ npm install
+
+# Compile the clientside JavaScript
+$ npm run client:build
+
+# Restart the service
+sudo systemctl restart robotslam
 ```
